@@ -898,29 +898,44 @@ class ArraysCodeModel {
 
     /**
      * leetCode 713. 乘积小于 K 的子数组 (middle)
-     * 给定一个含有 n 个正整数的数组和一个正整数 target 。
-     * 找出该数组中满足其总和大于等于 target 的长度最小的 连续子数组 [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0 。
-     *
+     * 给你一个正整数数组 num 和一个整数 k ，请你返回子数组内所有元素的乘积严格小于 k 的连续子数组的数目。
      * 示例 1：
-     * 输入：target = 7, nums = [2,3,1,2,4,3]
-     * 输出：2
-     * 解释：子数组 [4,3] 是该条件下的长度最小的子数组。
+     * 输入：nums = [10,5,2,6], k = 100
+     * 输出：8
+     * 解释：8 个乘积小于 100 的子数组分别为：[10]、[5]、[2],、[6]、[10,5]、[5,2]、[2,6]、[5,2,6]。
+     * 需要注意的是 [10,5,2] 并不是乘积小于 100 的子数组。
      * 示例 2：
-     * 输入：target = 4, nums = [1,4,4]
-     * 输出：1
-     * 示例 3：
-     * 输入：target = 11, nums = [1,1,1,1,1,1,1,1]
+     * 输入：nums = [1,2,3], k = 0
      * 输出：0
+     *
      *
      * 提示：双指针
      */
     fun numSubarrayProductLessThanK(nums: IntArray, k: Int): Int {
-        //todo
-        return 0
+        if (k <= 1) {
+            //按照题意,nums是正整数数组,最小值是 1
+            return 0
+        }
+        var ans = 0
+        //双指针,指向区间
+        var start = 0
+        var end = 0
+        //双指针区间的乘积
+        var sum = 1
+        while (end < nums.size) {
+            sum *= nums[end]
+            while (sum >= k) {
+                sum /= nums[start++]
+            }
+            //区间长度即为可组合的子数组的数量
+            ans += end - start + 1
+            end++
+        }
+        return ans
     }
 }
 
 fun main() {
     val item = ArraysCodeModel()
-    println(item.maxSubArray(intArrayOf(0,0)))
+    println(item.maxSubArray(intArrayOf(0, 0)))
 }
