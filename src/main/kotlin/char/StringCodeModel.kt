@@ -897,6 +897,53 @@ class StringCodeModel {
         }
         return ans
     }
+
+    /**
+     * leetCode 524. 通过删除字母匹配到字典里最长单词(middle)
+     * 给你一个字符串 s(1 <= s.length <= 1000) 和一个字符串数组 dictionary(仅有小写英文字母，1 <= dictionary.length <= 1000)
+     * 找出并返回 dictionary 中最长的字符串，该字符串可以通过删除 s 中的某些字符得到
+     * 如果答案不止一个，返回长度最长且字母序最小的字符串
+     * 如果答案不存在，则返回空字符串
+     *
+     * 示例 1：
+     * 输入：s = "abpcplea", dictionary = ["ale","apple","monkey","plea"]
+     * 输出："apple"
+     * 示例 2：
+     * 输入：s = "abpcplea", dictionary = ["a","b","c"]
+     * 输出："a"
+     *
+     */
+    fun findLongestWord(s: String, dictionary: List<String>): String {
+        //按照长度和字母序列号排序
+        val result = dictionary.sortedWith { o1, o2 ->
+            if (o1.length != o2.length) {
+                o2.length - o1.length
+            } else {
+                o1.compareTo(o2)
+            }
+        }
+        var ans = ""
+        for (item in result) {
+            if (item.length > s.length) {
+                //长度大于 s，肯定不是子字符串
+                continue
+            }
+            //双指针快速排查是否子序列
+            var indexItem = 0
+            var indexS = 0
+            while (indexItem < item.length && indexS < s.length) {
+                if (item[indexItem] == s[indexS]) {
+                    indexItem++
+                }
+                indexS++
+            }
+            if (indexItem == item.length) {
+                ans = item
+                break
+            }
+        }
+        return ans
+    }
 }
 
 fun main(args: Array<String>) {
@@ -924,9 +971,10 @@ fun main(args: Array<String>) {
 //    println(item.validIPAddress("172.16.254.1"))
 //    println(item.validIPAddress("2001:0db8:85a3:0:0:8A2E:0370:7334"))
 //    println(item.validIPAddress("256.256.256.256"))
-    println(item.magicalString(6))
-    println(item.magicalString(1))
-    println(item.magicalString(4))
+//    println(item.magicalString(6))
+//    println(item.magicalString(1))
+    println(item.findLongestWord("abpcplea", listOf("ale","apple","monkey","plea")))
+    println(item.findLongestWord("abpcplea", listOf("a","b","c")))
 }
 
 
