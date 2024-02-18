@@ -1,6 +1,7 @@
 package array
 
 import java.util.*
+import kotlin.collections.HashSet
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -934,9 +935,71 @@ class ArraysCodeModel {
         return ans
     }
 
+    /**
+     * leetCode 532. 数组中的 k-diff 数对 (middle)
+     * 给你一个整数数组 nums 和一个整数 k，请你在数组中找出 不同的 k-diff 数对，并返回不同的 k-diff 数对 的数目
+     *
+     * k-diff 数对定义为一个整数对 (nums[i], nums[j]) ，并满足下述全部条件：
+     * 0 <= i, j < nums.length
+     * i != j
+     * |nums[i] - nums[j]| == k
+     * 注意，|val| 表示 val 的绝对值。
+     *
+     * 示例 1：
+     * 输入：nums = [3, 1, 4, 1, 5], k = 2
+     * 输出：2
+     * 解释：数组中有两个 2-diff 数对, (1, 3) 和 (3, 5)。
+     * 尽管数组中有两个 1 ，但我们只应返回不同的数对的数量。
+     * 示例 2：
+     * 输入：nums = [1, 2, 3, 4, 5], k = 1
+     * 输出：4
+     * 解释：数组中有四个 1-diff 数对, (1, 2), (2, 3), (3, 4) 和 (4, 5) 。
+     * 示例 3：
+     * 输入：nums = [1, 3, 1, 5, 4], k = 0
+     * 输出：1
+     * 解释：数组中只有一个 0-diff 数对，(1, 1)
+     * 提示：排序 + 双指针
+     */
+    fun findPairs(nums: IntArray, k: Int): Int {
+        if (k < 0) {
+            //相减后的绝对值,不存在负数
+            return 0
+        }
+        //排序
+        nums.sort()
+        var start = 0
+        var end = 1
+        var count = 0
+        while (start < nums.size - 1 && end < nums.size) {
+            if (start > 0 && nums[start] == nums[start - 1]) {
+                //已经排序,过滤重复
+                start++
+                continue
+            }
+            if (end <= start) {
+                //对重复数据造成的 end 下标修正
+                end = start + 1
+            }
+            //排序后从小到大,化解绝对值计算为：nums[start] + k = nums[end]
+            while (end < nums.size && (nums[end] < nums[start] + k)) {
+                end++
+            }
+            if (end < nums.size && (nums[start] + k == nums[end])) {
+                //找到目标
+                count++
+            }
+            start++
+        }
+        return count
+    }
 }
 
 fun main() {
     val item = ArraysCodeModel()
-    println(item.maxSubArray(intArrayOf(0, 0)))
+    println(item.findPairs(intArrayOf(3, 1, 4, 1, 5), 2))  //2
+    println(item.findPairs(intArrayOf(1, 2, 3, 4, 5), 1))   //4
+    println(item.findPairs(intArrayOf(1, 3, 1, 5, 4), 0))   // 1
+    println(item.findPairs(intArrayOf(1, 2, 4, 4, 3, 3, 0, 9, 2, 3), 3)) //2
+
+
 }
