@@ -58,22 +58,6 @@ class IntCharCodeModel {
         val ans = String(charArray)
         return ans.toIntOrNull() ?: -1
     }
-
-    private fun binarySearch(arrays: CharArray, target: Char): Int {
-        var start = 0
-        var end = arrays.size - 1
-        while (start <= end) {
-            val mid = start + (end - start) / 2
-            if (arrays[mid] < target) {
-                start = mid + 1
-            } else if (arrays[mid] > target) {
-                end = mid - 1
-            } else {
-                return mid
-            }
-        }
-        return -1
-    }
 }
 
 fun main() {
