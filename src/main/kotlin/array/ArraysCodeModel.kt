@@ -992,14 +992,92 @@ class ArraysCodeModel {
         }
         return count
     }
+
+    /**
+     * leetCode 581. 最短无序连续子数组 (middle)
+     * 给你一个整数数组 nums ，你需要找出一个 连续子数组 ，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序
+     * 请你找出符合题意的 最短 子数组，并输出它的长度。
+     *
+     * 示例 1：
+     * 输入：nums = [2,6,4,8,10,9,15]
+     * 输出：5
+     * 解释：你只需要对 [6, 4, 8, 10, 9] 进行升序排序，那么整个表都会变为升序排序
+     * 示例 2：
+     * 输入：nums = [1,2,3,4]
+     * 输出：0
+     * 示例 3：
+     * 输入：nums = [1]
+     * 输出：0
+     * 提示：先排序,然后双指针找不同
+     */
+    fun findUnsortedSubarray(nums: IntArray): Int {
+        val sorted = nums.sortedArray()
+        //找到左右两边,第一个不同的下标
+        var start = 0
+        var end = nums.lastIndex
+        while (start <= end && nums[start] == sorted[start]) {
+            start++
+        }
+        while (start <= end && nums[end] == sorted[end]) {
+            end--
+        }
+        return end - start + 1
+    }
+
+    /**
+     * leetCode 611. 有效三角形的个数 (middle)
+     * 给定一个包含非负整数的数组 nums(1 <= nums.length<=1000) ，返回其中可以组成三角形三条边的三元组个数。
+     * (三角形判断:任意两边之和大于第三边)
+     * 示例 1:
+     * 输入: nums = [2,2,3,4]
+     * 输出: 3
+     * 解释:有效组合是:
+     * 2,3,4 (使用第一个 2)
+     * 2,3,4 (使用第二个 2)
+     * 2,2,3
+     * 示例 2:
+     * 输入: nums = [4,2,3,4]
+     * 输出: 4
+     *
+     *
+     */
+    fun triangleNumber(nums: IntArray): Int {
+        if (nums.size <= 2) {
+            return 0
+        }
+        //从小到大排序
+        nums.sort()
+        var ans = 0
+        var index = 2
+        while (index < nums.size) {
+            var dimple = 0
+            var position = index - 1
+            while (dimple < position) {
+                if (nums[dimple] + nums[position] > nums[index]) {
+                    // nums 从小到大排序
+                    // nums[dimple]+nums[position] > nums[index] 同时意味着：
+                    // position 不变,dimple 递增的情况，都会满足三角形的数组
+                    //因此 position - dimple，计算其中有多少个组合
+                    ans = position - dimple
+                    position--
+                } else {
+                    //nums 从小到大排序
+                    //nums[dimple]+nums[position] <= nums[index]，不满足三角形数组
+                    //dimple继续递增
+                    dimple++
+                }
+            }
+            index++
+        }
+        return ans
+    }
 }
 
 fun main() {
     val item = ArraysCodeModel()
-    println(item.findPairs(intArrayOf(3, 1, 4, 1, 5), 2))  //2
-    println(item.findPairs(intArrayOf(1, 2, 3, 4, 5), 1))   //4
-    println(item.findPairs(intArrayOf(1, 3, 1, 5, 4), 0))   // 1
-    println(item.findPairs(intArrayOf(1, 2, 4, 4, 3, 3, 0, 9, 2, 3), 3)) //2
-
-
+//    println(item.findPairs(intArrayOf(3, 1, 4, 1, 5), 2))  //2
+//    println(item.findPairs(intArrayOf(1, 2, 3, 4, 5), 1))   //4
+//    println(item.findPairs(intArrayOf(1, 3, 1, 5, 4), 0))   // 1
+    //println(item.triangleNumber(intArrayOf(2,2,3,4))) //3
+    println(item.triangleNumber(intArrayOf(4, 2, 3, 4))) //4
 }

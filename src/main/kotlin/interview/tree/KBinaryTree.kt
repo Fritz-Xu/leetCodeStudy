@@ -113,10 +113,34 @@ class KBinaryTree<E> {
         list.add(rootNode)
     }
 
+    fun buildTree(preorder: IntArray, inorder: IntArray): TreeNode<Int>? {
+        val inorderMap = mutableMapOf<Int, Int>()
+        repeat(inorder.size) {
+            inorderMap[inorder[it]] = it
+        }
+        val root = dfs(preorder, inorderMap, 0, 0, inorder.size - 1)
+        return root
+    }
+
+    private fun dfs(preorder: IntArray, inorderMap: MutableMap<Int, Int>, i: Int, l: Int, r: Int): TreeNode<Int>? {
+        if (r - l < 0) {
+            return null
+        }
+        //初始化 root
+        val root = TreeNode(preorder[i])
+        //查询 m，划分左右子树
+        val m = inorderMap[preorder[i]] ?: 0
+        //子问题:构建左子树
+        root.left = dfs(preorder, inorderMap, i + 1, l, m - 1)
+        //子问题:构建右子树
+        root.right = dfs(preorder, inorderMap, i + 1 + m - l, m + 1, r)
+        return root
+    }
+
     /**
      *  二叉树节点类
      */
-    private class TreeNode<E>(var data: E) {
+    class TreeNode<E>(var data: E) {
         var left: TreeNode<E>? = null // 左子节点指针
         var right: TreeNode<E>? = null // 右子节点指针
     }
