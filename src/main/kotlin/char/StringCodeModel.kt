@@ -1,5 +1,6 @@
 package char
 
+import jdk.internal.org.jline.utils.Colors.s
 import java.util.*
 import kotlin.math.max
 
@@ -944,6 +945,78 @@ class StringCodeModel {
         }
         return ans
     }
+
+    /**
+     * leetCode 640. 求解方程 (middle)
+     *
+     * 求解一个给定的方程字符串，将x以字符串 "x=#value" 的形式返回
+     * 该方程字符串长度一定大于 3，并且一定有 'x' 和 '=' 这两个字符，仅包含 '+' ， '-' 操作，变量 x 和其对应系数
+     * 如果方程没有解或存在的解不为整数，请返回 "No solution" 。如果方程有无限解，则返回 “Infinite solutions”
+     * 题目保证，如果方程中只有一个解，则 'x' 的值是一个整数
+     *
+     *
+     * 示例 1：
+     * 输入: equation = "x+5-3+x=6+x-2"
+     * 输出: "x=2"
+     * 示例 2:
+     * 输入: equation = "x=x"
+     * 输出: "Infinite solutions"
+     * 示例 3:
+     * 输入: equation = "2x=x"
+     * 输出: "x=0"
+     *
+     */
+    fun solveEquation(equation: String): String {
+        //x 数量统计
+        var x = 0
+        //常量计算结果
+        var result = 0
+        var index = 0
+        //运算符号标签
+        var op = 1
+        val charArray = equation.toCharArray()
+        while (index < equation.length) {
+            when (val item = charArray[index]) {
+                '+', '-', '=' -> {
+                    op = if (item == '-') -1 else 1
+                    if (item == '=') {
+                        //准备和右边的数据换算了
+                        //转换数据的正负符号
+                        x *= -1
+                        result *= -1
+                    }
+                    index++
+                }
+
+                else -> {
+                    var j = index
+                    while (j < equation.length && charArray[j] != '+' && charArray[j] != '-' && charArray[j] != '=') {
+                        j++
+                    }
+                    if (charArray[j - 1] == 'x') {
+                        //计算 x
+                        x += (if (index < j - 1) equation.substring(index, j - 1).toInt() else 1) * op
+                    } else {
+                        //计算常量
+                        result += equation.substring(index, j).toInt() * op
+                    }
+                    index = j
+                }
+            }
+        }
+        return if (x == 0) {
+            if (result == 0) {
+                "Infinite solutions"
+            } else {
+                "No solution"
+            }
+        } else {
+            "x=${(result / -x)}"
+        }
+
+    }
+
+
 }
 
 fun main(args: Array<String>) {
@@ -973,8 +1046,8 @@ fun main(args: Array<String>) {
 //    println(item.validIPAddress("256.256.256.256"))
 //    println(item.magicalString(6))
 //    println(item.magicalString(1))
-    println(item.findLongestWord("abpcplea", listOf("ale","apple","monkey","plea")))
-    println(item.findLongestWord("abpcplea", listOf("a","b","c")))
+    println(item.findLongestWord("abpcplea", listOf("ale", "apple", "monkey", "plea")))
+    println(item.findLongestWord("abpcplea", listOf("a", "b", "c")))
 }
 
 
