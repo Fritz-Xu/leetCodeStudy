@@ -1,6 +1,5 @@
 package char
 
-import jdk.internal.org.jline.utils.Colors.s
 import java.util.*
 import kotlin.math.max
 

@@ -282,11 +282,102 @@ class BinarySearchModel {
         }
         return arr[l]
     }
+
+    /**
+     * leetCode 658. 找到 K 个最接近的元素 (middle)
+     * 给定一个 排序好 的数组 arr (升序)，两个整数 k 和 x ，从数组中找到最靠近 x（两数之差最小）的 k 个数。
+     * 返回的结果必须要是按升序排好的
+     * 整数 a 比整数 b 更接近 x 需要满足：
+     * |a - x| < |b - x| 或者
+     * |a - x| == |b - x| 且 a < b
+     *
+     * 示例 1：
+     * 输入：arr = [1,2,3,4,5], k = 4, x = 3
+     * 输出：[1,2,3,4]
+     * 示例 2：
+     * 输入：arr = [1,2,3,4,5], k = 4, x = -1
+     * 输出：[1,2,3,4]
+     *
+     * 提示：二分查找符合条件的最左边界
+     */
+    fun findClosestElements(arr: IntArray, k: Int, x: Int): List<Int> {
+        var start = 0
+        //要找到 k 个连续元素,因此 end 最大值就是 arr.size - k
+        var end = arr.size - k
+        while (start < end) {
+            val mid = start + (end - start) / 2
+            val a = arr[mid]
+            val b = arr[mid + k]
+            //寻找最接近 x 的最左边界
+            if (x - a > b - x) {
+                start = mid + 1
+            } else {
+                // 下一轮搜索区间是 [left..mid]
+                end = mid
+            }
+        }
+        val list = mutableListOf<Int>()
+        for (index in start..<start + k) {
+            list.add(arr[index])
+        }
+        return list
+    }
+
+    /**
+     * leetCode 719. 找出第 k 小的数对距离 (hard)
+     * 数对 (a,b) 由整数 a 和 b 组成，其数对距离定义为 a 和 b 的绝对差值。
+     * 给你一个整数数组 nums 和一个整数 k ，数对由 nums[i] 和 nums[j] 组成且满足 0 <= i < j < nums.length
+     * 返回 所有数对距离中 第 k 小的数对距离
+     *
+     * 示例 1：
+     * 输入：nums = [1,3,1], k = 1
+     * 输出：0
+     * 解释：数对和对应的距离如下：
+     * (1,3) -> 2
+     * (1,1) -> 0
+     * (3,1) -> 2
+     * 距离第 1 小的数对是 (1,1) ，距离为 0 。
+     * 示例 2：
+     * 输入：nums = [1,1,1], k = 2
+     * 输出：0
+     * 示例 3：
+     * 输入：nums = [1,6,1], k = 3
+     * 输出：5
+     *
+     * 提示：二分 + 双指针查找
+     */
+    fun smallestDistancePair(nums: IntArray, k: Int): Int {
+        //排序,方便二分,也方便锁定区间
+        nums.sort()
+        var start = 0
+        var end = nums.last() - nums[start]
+        var ans = 0
+        //二分找第k小
+        while (start <= end) {
+            val mid = start + (end - start) / 2
+            var position = 0
+            var count = 0
+            for (index in nums.indices) {
+                while (nums[index] - nums[position] > mid) {
+                    position++
+                }
+                count += index - position
+            }
+            if (count >= k) {
+                ans = mid
+                end = mid - 1
+            } else {
+                start = mid + 1
+            }
+        }
+        return ans
+    }
 }
 
 fun main() {
     val model = BinarySearchModel()
     //println(model.pivotIndex(intArrayOf(-1, 0, 1, -1, 0)))
-    println(model.findMin(intArrayOf(3, 1, 3)))
+    println(model.findClosestElements(intArrayOf(1, 2, 3, 4, 5), 4, 3))
+    println(model.findClosestElements(intArrayOf(1, 1, 2, 2, 2, 2, 2, 3, 3), 3, 3))
 
 }
