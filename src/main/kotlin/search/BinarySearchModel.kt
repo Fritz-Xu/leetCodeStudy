@@ -350,21 +350,28 @@ class BinarySearchModel {
         //排序,方便二分,也方便锁定区间
         nums.sort()
         var start = 0
+        //end 设置为最大的数对距离
         var end = nums.last() - nums[start]
         var ans = 0
         //二分找第k小
         while (start <= end) {
+            //对数对的距离，进行二分
             val mid = start + (end - start) / 2
             var position = 0
             var count = 0
             for (index in nums.indices) {
                 while (nums[index] - nums[position] > mid) {
+                    //如果数对的值比当前二分的数对 mid 要大,说明index位于大数区间
+                    //position 前进，要进入数对值小的区间
                     position++
                 }
+                //统计小数对的数量
                 count += index - position
             }
             if (count >= k) {
+                //数对的数量大于k了,说明mid 可能就是第 k 小的数对的数量
                 ans = mid
+                //继续二分查找
                 end = mid - 1
             } else {
                 start = mid + 1
