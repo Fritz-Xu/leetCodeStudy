@@ -1015,6 +1015,118 @@ class StringCodeModel {
 
     }
 
+    /**
+     * leetCode 777. 在LR字符串中交换相邻字符 (middle)
+     *
+     * 在一个由 'L' , 'R' 和 'X' 三个字符组成的字符串（例如"RXXLRXRXL"）中进行移动操作。
+     * 一次移动操作指用一个"LX"替换一个"XL"，或者用一个"XR"替换一个"RX"。
+     * 现给定起始字符串start和结束字符串end，请编写代码，当且仅当存在一系列移动操作使得start可以转换成end时， 返回True
+     *
+     * 示例 :
+     * 输入: start = "RXXLRXRXL", end = "XRLXXRRLX"
+     * 输出: True
+     * 解释:
+     * 我们可以通过以下几步将start转换成end:
+     * RXXLRXRXL ->
+     * XRXLRXRXL ->
+     * XRLXRXRXL ->
+     * XRLXXRRXL ->
+     * XRLXXRRLX
+     *
+     * 提示：这道题的本质就是 X 字符的位移
+     */
+    fun canTransform(start: String, end: String): Boolean {
+        if (start.replace("X", "") != end.replace("X", "")) {
+            //这道题的本质就是 X 字符的位移
+            //去掉全部的 X ,字符不相同，那么无法完成字符转换
+            return false
+        }
+        var index = 0
+        var position = 0
+        while (index < start.length) {
+            if (start[index] == 'X') {
+                index++
+                continue
+            }
+            while (end[position] == 'X') {
+                position++
+            }
+            if ((index != position && start[index] == 'L') != (index > position)) {
+                return false
+            }
+            position++
+            index++
+        }
+        return true
+    }
+
+    /**
+     * leetCode 809. 情感丰富的文字 (middle)
+     *
+     * 有时候人们会用重复写一些字母来表示额外的感受，比如 "hello" -> "heeellooo", "hi" -> "hiii"。
+     * 我们将相邻字母都相同的一串字符定义为相同字母组，例如："h", "eee", "ll", "ooo"。
+     * 对于一个给定的字符串 S ，如果另一个单词能够通过将一些字母组扩张从而使其和 S 相同，我们将这个单词定义为可扩张的（stretchy）。
+     *
+     * 扩张操作定义如下：选择一个字母组（包含字母 c ），然后往其中添加相同的字母 c 使其长度达到 3 或以上。
+     *
+     * 例如，以 "hello" 为例，我们可以对字母组 "o" 扩张得到 "hellooo"，但是无法以同样的方法得到 "helloo" 因为字母组 "oo" 长度小于 3。
+     * 此外，我们可以进行另一种扩张 "ll" -> "lllll" 以获得 "helllllooo"。
+     * 如果 s = "helllllooo"，那么查询词 "hello" 是可扩张的，
+     * 因为可以对它执行这两种扩张操作使得 query = "hello" -> "hellooo" -> "helllllooo" = s。
+     * 输入一组查询单词，输出其中可扩张的单词数量。
+     *
+     * 示例：
+     * 输入：
+     * s = "heeellooo"
+     * words = ["hello", "hi", "helo"]
+     * 输出：1
+     * 解释：
+     * 我们能通过扩张 "hello" 的 "e" 和 "o" 来得到 "heeellooo"。
+     * 我们不能通过扩张 "helo" 来得到 "heeellooo" 因为 "ll" 的长度小于 3 。
+     */
+    fun expressiveWords(s: String, words: Array<String>): Int {
+        if (s.length < 3) {
+            return 0
+        }
+        var ans = 0
+        for (item in words) {
+            if (item.length > s.length) {
+                //长度超过 s，那么无法扩展为 s
+                continue
+            }
+            if (expressiveWordsCheck(s, item)) {
+                ans++
+            }
+        }
+        return ans
+    }
+
+    private fun expressiveWordsCheck(target: String, item: String): Boolean {
+        var indexTarget = 0
+        var indexItem = 0
+        while (indexTarget < target.length || indexItem < item.length) {
+            if (indexTarget < target.length
+                && indexItem < item.length
+                //两个字符串对上相同字符, 一起前进
+                && target[indexTarget] == item[indexItem]
+            ) {
+                indexTarget++
+                indexItem++
+            } else if ((indexTarget in 2..<target.length
+                        && target[indexTarget] == target[indexTarget - 1]
+                        && target[indexTarget - 1] == target[indexTarget - 2])
+                || (indexTarget > 0 && indexTarget < target.length - 1
+                        && target[indexTarget] == target[indexTarget - 1]
+                        && target[indexTarget] == target[indexTarget + 1])
+            ) {
+                // 跳过 target 里面的连续相同字符
+                indexTarget++
+            } else {
+                return false
+            }
+        }
+        return indexItem == item.length
+    }
 
 }
 
@@ -1045,8 +1157,15 @@ fun main(args: Array<String>) {
 //    println(item.validIPAddress("256.256.256.256"))
 //    println(item.magicalString(6))
 //    println(item.magicalString(1))
-    println(item.findLongestWord("abpcplea", listOf("ale", "apple", "monkey", "plea")))
-    println(item.findLongestWord("abpcplea", listOf("a", "b", "c")))
+    println(item.expressiveWords("heeellooo", arrayOf("hello", "hi", "helo")))
+    println(item.expressiveWords("abcd", arrayOf("abc")))
+    println(item.expressiveWords("heeelllooo", arrayOf("hellllo"))) // 0
+    println(item.expressiveWords("sass", arrayOf("sa"))) // 0
+
+
 }
+
+
+
 
 
