@@ -850,7 +850,6 @@ class StringCodeModel {
         return "Neither"
     }
 
-
     /**
      * leetCode 481. 神奇字符串(middle)
      *
@@ -867,12 +866,20 @@ class StringCodeModel {
      * 示例 2：
      * 输入：n = 1
      * 输出：n 是 1，神奇字符串是 122 开头，所以返回 1
-     *
+     * 提示：找规律，初始数字为122，指针i初始为下标是 2
+     * <p>
+     *  12<2>：+ 2个1  = 122 + 11
+     *  122<1>1：+ 1个2 = 12211 + 2
+     *  1221<1>2：+ 1个1 = 122112 + 1
+     *  12211<2>1：+ 2个2 = 1221121 + 22
+     *  </p>
+     *  看最后一个数字是2就变成1, 1就变成2，个数按照i指针的内容确定
      */
     fun magicalString(n: Int): Int {
         if (n == 0) {
             return 0
         }
+        //浮动指针
         var dimple = 2
         if (n <= (dimple + 1)) {
             return 1
@@ -882,6 +889,7 @@ class StringCodeModel {
         while (builder.length < n) {
             val last = builder.last()
             val check = builder[dimple] == '2'
+            //要添加的元素
             val append = if (last == '1') '2' else '1'
             builder.append(append)
             if (append == '1') {
@@ -1128,39 +1136,110 @@ class StringCodeModel {
         return indexItem == item.length
     }
 
+    /**
+     * leetCode 838. 推多米诺 (middle)
+     *n 张多米诺骨牌排成一行，将每张多米诺骨牌垂直竖立。在开始时，同时把一些多米诺骨牌向左或向右推。
+     * 每过一秒，倒向左边的多米诺骨牌会推动其左侧相邻的多米诺骨牌。同样地，倒向右边的多米诺骨牌也会推动竖立在其右侧的相邻多米诺骨牌。
+     * 如果一张垂直竖立的多米诺骨牌的两侧同时有多米诺骨牌倒下时，由于受力平衡， 该骨牌仍然保持不变。
+     * 就这个问题而言，我们会认为一张正在倒下的多米诺骨牌不会对其它正在倒下或已经倒下的多米诺骨牌施加额外的力。
+     * 给你一个字符串 dominoes 表示这一行多米诺骨牌的初始状态，其中：
+     * dominoes[i] = 'L'，表示第 i 张多米诺骨牌被推向左侧，
+     * dominoes[i] = 'R'，表示第 i 张多米诺骨牌被推向右侧，
+     * dominoes[i] = '.'，表示没有推动第 i 张多米诺骨牌。
+     * 返回表示最终状态的字符串。
+     *
+     * 示例 1：
+     * 输入：dominoes = "RR.L"
+     * 输出："RR.L"
+     * 解释：第一张多米诺骨牌没有给第二张施加额外的力。
+     * 示例 2：
+     * 输入：dominoes = ".L.R...LR..L.."
+     * 输出："LL.RR.LLRRLL.."
+     *
+     * 提示：对于已经是 L 或者 R 的字符，不会再发生变化，只需要留意 . 的情况
+     *      中心扩展和双指针
+     */
+    fun pushDominoes(dominoes: String): String {
+        if (dominoes.length < 2
+            || !dominoes.contains("L") && !dominoes.contains("R")
+            || !dominoes.contains(".") && !dominoes.contains("R")
+            || !dominoes.contains(".") && !dominoes.contains("L")
+        ) {
+            return dominoes
+        }
+        val ans = StringBuilder()
+        //添加方便计算又不会造成影响的首尾字符
+        val result = "L${dominoes}0"
+        var current = 0
+        while (ans.length < result.length) {
+            if (result[current] == 'L' || result[current] == 'R' || result[current] == '0') {
+                ans.append(result[current])
+                current++
+                continue
+            }
+            //出来 start 遇到 . 的情况
+            val leftChar = result[current - 1]
+            var end = current + 1
+            //锁定这次的 . end 区间
+            while (end < result.length && result[end] == '.') {
+                end++
+            }
+            end = end.coerceAtMost(result.length - 1)
+            if (leftChar == 'L') {
+                if (result[end] == 'L' || result[end] == '.' || result[end] == '0') {
+                    val append = if (result[end] == '0') '.' else result[end]
+                    repeat(end - current) {
+                        ans.append(append)
+                    }
+                } else if (result[end] == 'R') {
+                    //左L 右R,无变化
+                    repeat(end - current) {
+                        ans.append('.')
+                    }
+                }
+                current = end
+                continue
+            }
+            if (leftChar == 'R') {
+                if (result[end] == 'R' || result[end] == '.' || result[end] == '0') {
+                    repeat(end - current) {
+                        ans.append('R')
+                    }
+                } else if (result[end] == 'L') {
+                    //左右都有,最复杂的情况
+                    val mid = (end + current - 1) / 2f
+                    var left = current.toFloat()
+                    var right = end - 1f
+                    while (left <= mid) {
+                        if (left < mid) {
+                            ans.append('R')
+                        } else {
+                            ans.append('.')
+                        }
+                        left++
+                    }
+                    while (right > mid) {
+                        ans.append('L')
+                        right--
+                    }
+                }
+                current = end
+                continue
+            }
+        }
+        //处理额外字符
+        return ans.deleteAt(0).deleteAt(ans.lastIndex).toString()
+    }
+
 }
 
 fun main(args: Array<String>) {
     val item = StringCodeModel()
-//    print(item.isValid("{}]"))
-//    println((",false"))
-//    print(item.isValid("(([]){})"))
-//    println((",true"))
-//    print(item.isValid("([)]"))
-//    println((",false"))
-//    print(item.isValid("(("))
-//    println((",false"))
-//    print(item.isValid("){"))
-//    println((",false"))
-//    print(item.isValid("(["))
-//    println((",false"))
-
-    //println(item.decodeString("3[a2[c]]") + ",ans is :accaccacc" + ",you are ${item.decodeString("3[a2[c]]") == "accaccacc"}")
-
-//    println(item.isIsomorphic("paper", "title"))
-//    println(item.longestPalindrome("ccd"))
-//    println(item.reverseWords("the sky is blue"))
-//    println(item.longestPalindromeChild("ccd"))
-//    println(item.compress(charArrayOf('a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b')))
-//    println(item.validIPAddress("172.16.254.1"))
-//    println(item.validIPAddress("2001:0db8:85a3:0:0:8A2E:0370:7334"))
-//    println(item.validIPAddress("256.256.256.256"))
-//    println(item.magicalString(6))
-//    println(item.magicalString(1))
-    println(item.expressiveWords("heeellooo", arrayOf("hello", "hi", "helo")))
-    println(item.expressiveWords("abcd", arrayOf("abc")))
-    println(item.expressiveWords("heeelllooo", arrayOf("hellllo"))) // 0
-    println(item.expressiveWords("sass", arrayOf("sa"))) // 0
+    println(item.pushDominoes("..R..")) //..RRR
+    println(item.pushDominoes("R.R.L")) //RRR.L
+    println(item.pushDominoes("RR.L")) //RR.L
+    println(item.pushDominoes("RLR")) //RLR
+    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
 
 
 }

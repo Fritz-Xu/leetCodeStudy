@@ -1120,8 +1120,6 @@ class ArraysCodeModel {
                 //计算需要减少中心点自己
                 ans += end - start - 1
             }
-            start = 0
-            end = 0
         }
         return ans
     }
