@@ -1,7 +1,7 @@
 package array
 
 import java.util.*
-import kotlin.collections.HashSet
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -1129,6 +1129,46 @@ class ArraysCodeModel {
                 || a > b
                 || (a > 100 && b < 100))
     }
+
+    /**
+     * leetCode 870. 优势洗牌 (middle)
+     * 给定两个长度相等的数组 nums1 和 nums2
+     * nums1 相对于 nums2 的优势可以用满足 nums1[i] > nums2[i] 的索引 i 的数目来描述。
+     * 返回 nums1 的任意排列，使其相对于 nums2 的优势最大化。
+     * 示例 1：
+     * 输入：nums1 = [2,7,11,15], nums2 = [1,10,4,11]
+     * 输出：[2,11,7,15]
+     * 示例 2：
+     * 输入：nums1 = [12,24,8,32], nums2 = [13,25,32,11]
+     * 输出：[24,32,8,12]
+     *
+     * 提示：把下标排序，排序逻辑用数组元素
+     */
+    fun advantageCount(nums1: IntArray, nums2: IntArray): IntArray {
+        var indexList = IntArray(nums2.size)
+        val ans = IntArray(nums2.size)
+        repeat(nums1.size) {
+            indexList[it] = it
+        }
+        //按照nums2[index],从大到小排序
+        //排序后indexList[]中第一个元素是 nums2 中最小值的下标
+        //第二个元素是 nums2 中第二小值的下标
+        indexList = indexList.sortedWith { old, current ->
+            nums2[old] - nums2[current]
+        }.toIntArray()
+        //nums1从小到大排序
+        nums1.sort()
+        var start = 0
+        var end = nums2.size - 1
+        for (num in nums1) {
+            //indexList[start] 为 nums2中最小值的下标，index[right] 为 nums2 中最大值的下标
+            //如果 num 比 nums2 中的最小值大，则本次res中num对应的下标为index[start],然后 start++
+            //否则本次  num 对应的下标为index[end],end--
+            val index = if (num > nums2[indexList[start]]) indexList[start++] else indexList[end--]
+            ans[index] = num
+        }
+        return ans
+    }
 }
 
 fun main() {
@@ -1137,9 +1177,6 @@ fun main() {
 //    println(item.findPairs(intArrayOf(1, 2, 3, 4, 5), 1))   //4
 //    println(item.findPairs(intArrayOf(1, 3, 1, 5, 4), 0))   // 1
     //println(item.triangleNumber(intArrayOf(2,2,3,4))) //3
-
-    println(item.numFriendRequests(intArrayOf(16, 16))) //2
-    println(item.numFriendRequests(intArrayOf(16, 17, 18))) //2
-    println(item.numFriendRequests(intArrayOf(20, 30, 100, 110, 120))) //3
+    println(item.advantageCount(intArrayOf(2, 7, 11, 15), intArrayOf(1, 10, 4, 11)))
 
 }
