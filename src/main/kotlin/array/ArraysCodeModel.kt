@@ -1169,6 +1169,44 @@ class ArraysCodeModel {
         }
         return ans
     }
+
+    /**
+     * leetCode 881. 救生艇(middle)
+     * 给定数组 people 。people[i]表示第 i 个人的体重 ，船的数量不限，每艘船可以承载的最大重量为 limit。
+     * 每艘船最多可同时载两人，但条件是这些人的重量之和最多为 limit。
+     * 返回 承载所有人所需的最小船数 。
+     *
+     * 示例 1：
+     * 输入：people = [1,2], limit = 3
+     * 输出：1
+     * 解释：1 艘船载 (1, 2)
+     * 示例 2：
+     * 输入：people = [3,2,2,1], limit = 3
+     * 输出：3
+     * 解释：3 艘船分别载 (1, 2), (2) 和 (3)
+     * 示例 3：
+     * 输入：people = [3,5,3,4], limit = 5
+     * 输出：4
+     * 解释：4 艘船分别载 (3), (3), (4), (5)
+     *
+     */
+    fun numRescueBoats(people: IntArray, limit: Int): Int {
+        people.sort()
+        var ans = 0
+        var start = 0
+        var end = people.lastIndex
+        while (start <= end) {
+            if (people[start] + people[end] <= limit) {
+                //满足限制要求,start++
+                start++
+            }
+            //不管是否满足限制,end使用后都要减 1
+            end--
+            //数量恒定+1
+            ans++
+        }
+        return ans
+    }
 }
 
 fun main() {
@@ -1177,6 +1215,12 @@ fun main() {
 //    println(item.findPairs(intArrayOf(1, 2, 3, 4, 5), 1))   //4
 //    println(item.findPairs(intArrayOf(1, 3, 1, 5, 4), 0))   // 1
     //println(item.triangleNumber(intArrayOf(2,2,3,4))) //3
-    println(item.advantageCount(intArrayOf(2, 7, 11, 15), intArrayOf(1, 10, 4, 11)))
+//    println(item.numRescueBoats(intArrayOf(1, 2), 3)) // 1
+//    println(item.numRescueBoats(intArrayOf(3, 2, 2, 1), 3)) // 3
+//    println(item.numRescueBoats(intArrayOf(3, 5, 3, 4), 5)) // 4
+//    println(item.numRescueBoats(intArrayOf(5, 1, 4, 2), 6)) // 2
+//    println(item.numRescueBoats(intArrayOf(7, 3, 2), 8)) // 2
+
+    println(item.numRescueBoats(intArrayOf(3, 8, 7, 1, 4), 9)) // 3
 
 }
