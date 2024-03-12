@@ -1235,11 +1235,11 @@ class StringCodeModel {
 
 fun main(args: Array<String>) {
     val item = StringCodeModel()
-    println(item.pushDominoes("..R..")) //..RRR
-    println(item.pushDominoes("R.R.L")) //RRR.L
-    println(item.pushDominoes("RR.L")) //RR.L
-    println(item.pushDominoes("RLR")) //RLR
-    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
+//    println(item.pushDominoes("..R..")) //..RRR
+//    println(item.pushDominoes("R.R.L")) //RRR.L
+//    println(item.pushDominoes("RR.L")) //RR.L
+//    println(item.pushDominoes("RLR")) //RLR
+//    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
 
 
 }
