@@ -1258,7 +1258,44 @@ class ArraysCodeModel {
         return ans
     }
 
-
+    /**
+     *  leetCode 930. 和相同的二元子数组(middle)
+     *  给你一个数组 nums ，和一个整数 goal ，请你统计并返回有多少个和为 goal 的 非空 子数组。
+     *  子数组 是数组的一段连续部分。
+     *
+     * 示例 1：
+     * 输入：nums = [1,0,1,0,1], goal = 2
+     * 输出：4
+     * 解释：
+     * 有 4 个满足题目要求的子数组：[1,0,1]、[1,0,1,0]、[0,1,0,1]、[1,0,1]
+     * 示例 2：
+     * 输入：nums = [0,0,0,0,0], goal = 0
+     * 输出：15
+     *
+     *  提示:使用前缀和,前缀和数组为 sum，且子数组[i, j]的区间和为goal，那么 sum[j + 1] − sum[i] = goal
+     */
+    fun numSubarraysWithSum(nums: IntArray, goal: Int): Int {
+        //计算出前缀和数组
+        val preSum = IntArray(nums.size + 1)
+        for (index in 1..nums.size) {
+            preSum[index] = preSum[index - 1] + nums[index - 1]
+        }
+        val map = mutableMapOf<Int, Int>()
+        //用于统计前缀和 - goal == 0 的情况
+        map[0] = 1
+        var ans = 0
+        repeat(nums.size) {
+            //先算出 0 到 it 的元素之和
+            val right = preSum[it + 1]
+            //子数组[left, right]的区间和为goal
+            //那么按照前缀和算法: preSum[right + 1] − preSum[left] = goal
+            val left = right - goal
+            //记录该preSum出现次数并统计
+            ans += map.getOrDefault(left, 0)
+            map[right] = map.getOrDefault(right, 0) + 1
+        }
+        return ans
+    }
 
 }
 
@@ -1280,7 +1317,7 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4))) // 5
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
-    println(item.totalFruit(intArrayOf(1, 1, 6, 5, 6, 6, 1, 1, 1, 1))) // 6
+    println(item.numSubarraysWithSum(intArrayOf(1, 0, 1, 0, 1), 2)) // 6
 
 
 }
