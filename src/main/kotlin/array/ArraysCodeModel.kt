@@ -1297,6 +1297,38 @@ class ArraysCodeModel {
         return ans
     }
 
+    /**
+     * leetCode 946. 验证栈序列(middle)
+     * 给定 pushed 和 popped 两个序列，每个序列中的 值都不重复
+     * 只有当它们可能是在最初空栈上进行的推入 push 和弹出 pop 操作序列的结果时，返回 true；否则，返回 false 。
+     *
+     * 示例 1：
+     * 输入：pushed = [1,2,3,4,5], popped = [4,5,3,2,1]
+     * 输出：true
+     * 解释：我们可以按以下顺序执行：
+     * push(1), push(2), push(3), push(4), pop() -> 4,
+     * push(5), pop() -> 5, pop() -> 3, pop() -> 2, pop() -> 1
+     * 示例 2：
+     * 输入：pushed = [1,2,3,4,5], popped = [4,3,5,1,2]
+     * 输出：false
+     * 解释：1 不能在 2 之前弹出。
+     */
+    fun validateStackSequences(pushed: IntArray, popped: IntArray): Boolean {
+        if (pushed.size != popped.size) {
+            return false
+        }
+        val deque = ArrayDeque<Int>()
+        var position = 0
+        repeat(popped.size) { index ->
+            deque.addLast(pushed[index])
+            //当尾数对上 pop 的第一个元素,就推出尾数
+            while (deque.isNotEmpty() && deque.peekLast() == popped[position]){
+                deque.pollLast()
+                position++
+            }
+        }
+        return deque.isEmpty()
+    }
 }
 
 fun main() {
@@ -1317,7 +1349,8 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4))) // 5
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
-    println(item.numSubarraysWithSum(intArrayOf(1, 0, 1, 0, 1), 2)) // 6
+    println(item.validateStackSequences(intArrayOf(1,2,3,4,5), intArrayOf(4,5,3,2,1))) // true
+    println(item.validateStackSequences(intArrayOf(1,2,3,4,5), intArrayOf(4,3,5,1,2))) // false
 
 
 }
