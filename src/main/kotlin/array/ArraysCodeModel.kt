@@ -1322,13 +1322,71 @@ class ArraysCodeModel {
         repeat(popped.size) { index ->
             deque.addLast(pushed[index])
             //当尾数对上 pop 的第一个元素,就推出尾数
-            while (deque.isNotEmpty() && deque.peekLast() == popped[position]){
+            while (deque.isNotEmpty() && deque.peekLast() == popped[position]) {
                 deque.pollLast()
                 position++
             }
         }
         return deque.isEmpty()
     }
+
+    /**
+     * leetCode992. K 个不同整数的子数组(hard)
+     * 给定一个正整数数组 nums 和一个整数 k，返回 nums 中 「好子数组」 的数目。
+     * 如果 nums 的某个子数组中不同整数的个数恰好为 k，则称 nums 的这个连续、不一定不同的子数组为「好子数组 」
+     * 例如，[1,2,3,1,2] 中有 3 个不同的整数：1，2，以及 3
+     * 子数组 是数组的 连续 部分
+     *
+     * 示例 1：
+     * 输入：nums = [1,2,1,2,3], k = 2
+     * 输出：7
+     * 1，2，3
+     * 解释：恰好由 2 个不同整数组成的子数组：[1,2], [2,1], [1,2], [2,3], [1,2,1], [2,1,2], [1,2,1,2].
+     * 示例 2：
+     * 输入：nums = [1,2,1,3,4], k = 3
+     * 输出：3
+     * 解释：恰好由 3 个不同整数组成的子数组：[1,2,1,3], [2,1,3], [1,3,4].
+     */
+    fun subarraysWithKDistinct(nums: IntArray, k: Int): Int {
+        val lower = IntArray(nums.size)
+        val upper = IntArray(nums.size)
+        //找到每个元素最左边的只有 k 个不同元素的连续子区间的区间开始位置
+        //如[1,2,2,1,3],对元素 3来说，就是第一个 1 的位置
+        subarraysWithKDistinctFind(lower, nums, k)
+        //找到每个元素最左边的只有 k - 1 个不同元素的连续子区间的区间开始位置
+        //如[1,2,2,1,3],对元素 3 来说，就是第一个 2 的位置
+        subarraysWithKDistinctFind(upper, nums, k - 1)
+        var ans = 0
+        for (i in nums.indices) {
+            ans += upper[i] - lower[i]
+        }
+        return ans
+    }
+
+    private fun subarraysWithKDistinctFind(arr: IntArray, nums: IntArray, k: Int) {
+        val n = nums.size
+        val cnt = IntArray(n + 1)
+        var index = 0
+        var position = 0
+        var sum = 0
+        while (index < n) {
+            val right = nums[index]
+            if (cnt[right] == 0) {
+                sum++
+            }
+            cnt[right]++
+            while (sum > k) {
+                val left = nums[position++]
+                cnt[left]--
+                if (cnt[left] == 0) {
+                    sum--
+                }
+            }
+            arr[index] = position
+            index++
+        }
+    }
+
 }
 
 fun main() {
@@ -1349,8 +1407,7 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4))) // 5
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
-    println(item.validateStackSequences(intArrayOf(1,2,3,4,5), intArrayOf(4,5,3,2,1))) // true
-    println(item.validateStackSequences(intArrayOf(1,2,3,4,5), intArrayOf(4,3,5,1,2))) // false
+    println(item.subarraysWithKDistinct(intArrayOf(1, 2, 1, 2, 3), 2)) // 7
 
 
 }
