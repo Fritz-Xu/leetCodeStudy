@@ -1387,6 +1387,46 @@ class ArraysCodeModel {
         }
     }
 
+    /**
+     * leetCode 1004. 最大连续1的个数 III(middle)
+     * 给定一个二进制数组 nums 和一个整数 k，如果可以翻转最多 k 个 0 ，则返回 数组中连续 1 的最大个数
+     *
+     * 示例 1：
+     * 输入：nums = [1,1,1,0,0,0,1,1,1,1,0], K = 2
+     * 输出：6
+     * 解释：[1,1,1,0,0,1,1,1,1,1,1]
+     * 粗体数字从 0 翻转到 1，最长的子数组长度为 6。
+     * 示例 2：
+     * 输入：nums = [0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1], K = 3
+     * 输出：10
+     * 解释：[0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1]
+     * 粗体数字从 0 翻转到 1，最长的子数组长度为 10。
+     *
+     */
+    fun longestOnes(nums: IntArray, k: Int): Int {
+        var start = 0
+        var end = 0
+        var count = 0
+        var ans = 0
+        while (end < nums.size) {
+            val item = nums[end]
+            if (item == 0) {
+                count++
+            }
+            //0 个数已经超过限制
+            //开始移动 start ,修改滑动窗口区间
+            while (count > k){
+                //移动到下一个窗口区间
+                if (nums[start++] == 0){
+                    count--
+                }
+            }
+            ans = max(ans,end - start + 1)
+            end++
+        }
+        return ans
+    }
+
 }
 
 fun main() {
@@ -1407,7 +1447,9 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4))) // 5
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
-    println(item.subarraysWithKDistinct(intArrayOf(1, 2, 1, 2, 3), 2)) // 7
+    println(item.longestOnes(intArrayOf(1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0), 2)) // 6
+    println(item.longestOnes(intArrayOf(0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1), 3)) // 10
+
 
 
 }
