@@ -1230,6 +1230,33 @@ class StringCodeModel {
         //处理额外字符
         return ans.deleteAt(0).deleteAt(ans.lastIndex).toString()
     }
+
+    /**
+     * leetCode 1221. 分割平衡字符串 (easy)
+     * 平衡字符串 中，'L' 和 'R' 字符的数量是相同的。
+     * 给你一个平衡字符串 s，请你将它分割成尽可能多的子字符串，并满足：
+     * 每个子字符串都是平衡字符串。
+     * 返回可以通过分割得到的平衡字符串的 最大数量 。
+     *
+     * 示例 1：
+     * 输入：s = "RLRRLLRLRL"
+     * 输出：4
+     * 解释：s 可以分割为 "RL"、"RRLL"、"RL"、"RL" ，每个子字符串中都包含相同数量的 'L' 和 'R' 。
+     *
+     * 提示：贪心
+     */
+    fun balancedStringSplit(s: String): Int {
+        var ans = 0
+        var count = 0
+        //平衡字符串,那么正负相加应该为0
+        s.forEach { c ->
+            count += if (c == 'L') 1 else -1
+            if (count == 0) {
+                ans++
+            }
+        }
+        return ans
+    }
 }
 
 fun main(args: Array<String>) {
