@@ -1230,7 +1230,6 @@ class StringCodeModel {
         //处理额外字符
         return ans.deleteAt(0).deleteAt(ans.lastIndex).toString()
     }
-
 }
 
 fun main(args: Array<String>) {

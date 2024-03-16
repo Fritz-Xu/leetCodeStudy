@@ -1415,18 +1415,60 @@ class ArraysCodeModel {
             }
             //0 个数已经超过限制
             //开始移动 start ,修改滑动窗口区间
-            while (count > k){
+            while (count > k) {
                 //移动到下一个窗口区间
-                if (nums[start++] == 0){
+                if (nums[start++] == 0) {
                     count--
                 }
             }
-            ans = max(ans,end - start + 1)
+            ans = max(ans, end - start + 1)
             end++
         }
         return ans
     }
 
+    /**
+     * leetCode 1052. 爱生气的书店老板(middle)
+     * 有一个书店老板，他的书店开了 n 分钟。每分钟都有一些顾客进入这家商店。
+     * 给定一个长度为 n 的整数数组 customers ，其中 customers[i] 是在第 i 分钟开始时进入商店的顾客数量，所有这些顾客在第 i 分钟结束后离开。
+     * 在某些时候，书店老板会生气。 如果书店老板在第 i 分钟生气，那么 grumpy[i] = 1，否则 grumpy[i] = 0。
+     * 当书店老板生气时，那一分钟的顾客就会不满意，若老板不生气则顾客是满意的。
+     * 书店老板知道一个秘密技巧，能抑制自己的情绪，可以让自己连续 minutes 分钟不生气，但却只能使用一次。
+     * 请你返回 这一天营业下来，最多有多少客户能够感到满意 。
+     *
+     * 示例 1：
+     * 输入：customers = [1,0,1,2,1,1,7,5], grumpy = [0,1,0,1,0,1,0,1], minutes = 3
+     * 输出：16
+     * 解释：书店老板在最后 3 分钟保持冷静。
+     * 感到满意的最大客户数量 = 1 + 1 + 1 + 1 + 7 + 5 = 16.
+     * 示例 2：
+     * 输入：customers = [1], grumpy = [0], minutes = 1
+     * 输出：1
+     */
+    fun maxSatisfied(customers: IntArray, grumpy: IntArray, minutes: Int): Int {
+        if (customers.size <= minutes) {
+            return customers.sum()
+        }
+        val ans = IntArray(customers.size)
+        //先把必然满意的客户,存起来
+        repeat(customers.size) {
+            if (grumpy[it] == 0 && customers[it] >= 1) {
+                ans[it] = customers[it]
+                customers[it] = 0
+            }
+        }
+        var count = 0
+        var cur = 0
+        //滑动窗口
+        repeat(customers.size) { index ->
+            cur += customers[index]
+            if (index >= minutes) {
+                cur -= customers[index - minutes]
+            }
+            count = max(count, cur)
+        }
+        return ans.sum() + count
+    }
 }
 
 fun main() {
@@ -1447,9 +1489,9 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4))) // 5
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
-    println(item.longestOnes(intArrayOf(1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0), 2)) // 6
-    println(item.longestOnes(intArrayOf(0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1), 3)) // 10
-
+    println(item.maxSatisfied(intArrayOf(1, 0, 1, 2, 1, 1, 7, 5), intArrayOf(0, 1, 0, 1, 0, 1, 0, 1), 3)) // 16
+    println(item.maxSatisfied(intArrayOf(5, 8), intArrayOf(0, 1), 1)) // 13
+    println(item.maxSatisfied(intArrayOf(6, 10, 2, 1, 7, 9), intArrayOf(1, 0, 0, 0, 0, 1), 3)) // 29
 
 
 }
