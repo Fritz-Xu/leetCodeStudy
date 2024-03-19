@@ -186,12 +186,12 @@ class StringCodeModel {
     /**
      * leetCode 409. 最长回文串(easy)
      * “回文串”是一个正读和反读都一样的字符串，比如“level”或者“noon”等等就是回文串
-     * 现在给定一个包含大写字母和小写字母的字符串 s(最大长度为 2000，最小长度为 0),返回通过 这些字母 构造成的 最长的回文串
+     * 现在给定一个包含大写字母和小写字母的字符串 s(最大长度为 2000，最小长度为 0),返回通过 这些字母 构造成的 最长回文串
      * 在构造过程中，请注意 区分大小写 。比如 "Aa" 不能当做一个回文字符串
      * 示例 1:
      * 输入:s = "abccccdd"
      * 输出:7
-     * 解释: 我们可以构造的最长的回文串是"dccaccd", 它的长度是 7
+     * 解释: 我们可以构造的最长回文串是"dccaccd", 它的长度是 7
      *
      * 示例 2:
      * 输入:s = "a"
@@ -230,7 +230,7 @@ class StringCodeModel {
 
     /**
      * leetCode 516. 最长回文子串(middle)
-     * 给你一个字符串 s，找到 s 中最长的回文子串。
+     * 给你一个字符串 s，找到 s 中最长子回文串。
      * 如果字符串的反序与原始字符串相同，则该字符串称为回文字符串。
      *
      * 示例 1：
@@ -1257,6 +1257,67 @@ class StringCodeModel {
         }
         return ans
     }
+
+    fun reformat(s: String): String {
+        if (s.isEmpty()) {
+            return ""
+        }
+        if (s.length == 1) {
+            return s
+        }
+        val ans = CharArray(s.length)
+        var slow = 0
+        var fast = 1
+        ans[0] = '-'
+        ans[s.length - 1] = '-'
+        s.forEach { c ->
+            if (c in 'a'..'z' && slow in s.indices) {
+                ans[slow] = c
+                slow += 2
+            }
+            if (c in '0'..'9' && fast in s.indices) {
+                ans[fast] = c
+                fast += 2
+            }
+        }
+        if (ans[0] in 'a'..'z' && ans[1] in '0'..'9' && ans[s.length - 1] == '-') {
+            slow = 0
+            fast = 1
+            s.forEach { c ->
+                if (c in '0'..'9' && slow in s.indices) {
+                    ans[slow] = c
+                    slow += 2
+                }
+                if (c in 'a'..'z' && fast in s.indices) {
+                    ans[fast] = c
+                    fast += 2
+                }
+            }
+        }
+        val check = (ans[s.length - 1] in '0'..'9' && ans[s.length - 2] in 'a'..'z')
+                || (ans[s.length - 2] in '0'..'9' && ans[s.length - 1] in 'a'..'z')
+        if (!check) {
+            return ""
+        }
+        return String(ans)
+    }
+
+    fun isPrefixOfWord(sentence: String, searchWord: String): Int {
+        if (searchWord.isEmpty() || sentence.isEmpty()) {
+            return 0
+        }
+        val stringList = sentence.split(" ")
+        for (index in stringList.indices) {
+            val item = stringList[index]
+            if (item.startsWith(searchWord)) {
+                return index + 1
+            }
+        }
+        return 0
+    }
+
+
+
 }
 
 fun main(args: Array<String>) {
@@ -1266,7 +1327,10 @@ fun main(args: Array<String>) {
 //    println(item.pushDominoes("RR.L")) //RR.L
 //    println(item.pushDominoes("RLR")) //RLR
 //    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
+        println(item.isPrefixOfWord("i love eating burger","burg"))
 }
+
+
 
 
 
