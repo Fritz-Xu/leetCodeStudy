@@ -1,5 +1,6 @@
 package array
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym.MOD
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
@@ -1554,6 +1555,41 @@ class ArraysCodeModel {
         }
         return ans
     }
+
+    /**
+     * leetCode1537. 最大得分(hard)
+     */
+    fun maxSum(nums1: IntArray, nums2: IntArray): Int {
+        val ans1 = LongArray(nums1.size + 1)
+        val ans2 = LongArray(nums2.size + 1)
+        var index = 1
+        var position = 1
+        while (index <= nums1.size || position <= nums2.size) {
+            if (index <= nums1.size && position <= nums2.size) {
+                if (nums1[index - 1] < nums2[position - 1]) {
+                    ans1[index] = ans1[index - 1] + nums1[index - 1]
+                    index++
+                } else if (nums2[position - 1] < nums1[index - 1]) {
+                    ans2[position] = ans2[position - 1] + nums2[position - 1]
+                    position++
+                } else {
+                    ans2[position] = (max(ans1[index - 1].toDouble(), ans2[position - 1].toDouble()) + nums1[index - 1]).toLong()
+                    ans1[index] = ans2[position]
+                    index++
+                    position++
+                }
+            } else if (index <= nums1.size) {
+                ans1[index] = ans1[index - 1] + nums1[index - 1]
+                index++
+            } else {
+                ans2[position] = ans2[position - 1] + nums2[position - 1]
+                position++
+            }
+        }
+        return (max(ans1[nums1.size].toDouble(), ans2[nums2.size].toDouble()) % 1000000007).toInt()
+    }
+
+
 }
 
 fun main() {
@@ -1574,7 +1610,7 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4))) // 5
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
-    println(item.duplicateZeros(intArrayOf(1, 0, 2, 3, 0, 4, 5, 0)))
+    println(item.maxSum(intArrayOf(2, 4, 5, 8, 10), intArrayOf(4, 6, 8, 9)))
 
 
 }
