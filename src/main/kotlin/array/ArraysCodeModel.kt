@@ -1,7 +1,7 @@
 package array
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym.MOD
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -1573,7 +1573,8 @@ class ArraysCodeModel {
                     ans2[position] = ans2[position - 1] + nums2[position - 1]
                     position++
                 } else {
-                    ans2[position] = (max(ans1[index - 1].toDouble(), ans2[position - 1].toDouble()) + nums1[index - 1]).toLong()
+                    ans2[position] =
+                        (max(ans1[index - 1].toDouble(), ans2[position - 1].toDouble()) + nums1[index - 1]).toLong()
                     ans1[index] = ans2[position]
                     index++
                     position++
@@ -1589,7 +1590,92 @@ class ArraysCodeModel {
         return (max(ans1[nums1.size].toDouble(), ans2[nums2.size].toDouble()) % 1000000007).toInt()
     }
 
+    /**
+     * LeetCode 1969. 数组元素的最小非零乘积(middle)
+     * 给你一个正整数 p 。你有一个下标从 1 开始的数组 nums ，这个数组包含范围 [1, 2p - 1] 内所有整数的二进制形式（两端都 包含）。
+     * 你可以进行以下操作 任意 次：从 nums 中选择两个元素 x 和 y  。
+     * 选择 x 中的一位 与 y 对应位置的位交换。对应位置指的是两个整数 相同位置 的二进制位。
+     * 比方说，如果 x = 1101 且 y = 0011 ，交换右边数起第 2 位后，我们得到 x = 1111 和 y = 0001 。
+     * 请你算出进行以上操作 任意次 以后，nums 能得到的 最小非零 乘积。将乘积对 109 + 7 取余 后返回。
+     * 注意：答案应为取余 之前 的最小值。
+     * 示例 1：
+     * 输入：p = 1
+     * 输出：1
+     * 解释：nums = [1] 。
+     * 只有一个元素，所以乘积为该元素。
+     * 示例 2：
+     * 输入：p = 2
+     * 输出：6
+     * 解释：nums = [01, 10, 11] 。
+     * 所有交换要么使乘积变为 0 ，要么乘积与初始乘积相同。
+     * 所以，数组乘积 1 * 2 * 3 = 6 已经是最小值。
+     * 示例 3：
+     * 输入：p = 3
+     * 输出：1512
+     * 解释：nums = [001, 010, 011, 100, 101, 110, 111]
+     * - 第一次操作中，我们交换第二个和第五个元素最左边的数位。
+     *     - 结果数组为 [001, 110, 011, 100, 001, 110, 111] 。
+     * - 第二次操作中，我们交换第三个和第四个元素中间的数位。
+     *     - 结果数组为 [001, 110, 001, 110, 001, 110, 111] 。
+     * 数组乘积 1 * 6 * 1 * 6 * 1 * 6 * 7 = 1512 是最小乘积。
+     */
+    fun minNonZeroProduct(p: Int): Int {
+        //todo 不理解位运算,暂时无法解决
+        return -1
+    }
 
+    /**
+     * LeetCode 1743. 从相邻元素对还原数组(middle)
+     * 存在一个由 n 个不同元素组成的整数数组 nums ，但你已经记不清具体内容。好在你还记得 nums 中的每一对相邻元素。
+     * 给你一个二维整数数组 adjacentPairs ，大小为 n - 1 ，其中每个 adjacentPairs[i] = [ui, vi] 表示元素 ui 和 vi 在 nums 中相邻。
+     * 题目数据保证所有由元素 nums[i] 和 nums[i+1] 组成的相邻元素对都存在于 adjacentPairs 中
+     * 存在形式可能是 [nums[i], nums[i+1]] ，也可能是 [nums[i+1], nums[i]] 。这些相邻元素对可以 按任意顺序 出现。
+     * 返回 原始数组 nums 。如果存在多种解答，返回 其中任意一个 即可。
+     *
+     * 示例 1：
+     * 输入：adjacentPairs = [[2,1],[3,4],[3,2]]
+     * 输出：[1,2,3,4]
+     * 解释：数组的所有相邻元素对都在 adjacentPairs 中。
+     * 特别要注意的是，adjacentPairs[i] 只表示两个元素相邻，并不保证其 左-右 顺序。
+     * 示例 2：
+     * 输入：adjacentPairs = [[4,-2],[1,4],[-3,1]]
+     * 输出：[-2,4,1,-3]
+     * 解释：数组中可能存在负数。
+     * 另一种解答是 [-3,1,4,-2] ，也会被视作正确答案。
+     * 示例 3：
+     * 输入：adjacentPairs = [[100000,-100000]]
+     * 输出：[100000,-100000]
+     */
+    fun restoreArray(nums: Array<IntArray>): IntArray {
+        val ans = IntArray(nums.size + 1)
+        //用于记录,方便查找首尾
+        val map = mutableMapOf<Int, ArrayList<Int>>()
+        nums.forEach { array ->
+            array.forEachIndexed { index, item ->
+                if (map[item] == null) {
+                    map[item] = ArrayList()
+                }
+                map[item]?.add(if (index == 0) array[1] else array[0])
+            }
+        }
+        //找到一个元素,其相邻元素数组长度只有 1,作为 ans 的第一第二元素
+        for (item in map) {
+            if (item.value.size == 1) {
+                ans[0] = item.key
+                ans[1] = item.value[0]
+                break
+            }
+        }
+        //刚才填充了 2 个元素,所以从 2 开始
+        for (index in 2 until ans.size) {
+            //直接读取数组的 last 填充的元素,找到 map 存储的相邻元素数组
+            map[ans[index - 1]]?.let { array ->
+                //找到相邻元素数组的还没有使用过的元素,填充到 ans 中
+                ans[index] = array.first { item -> item != ans[index - 2] }
+            }
+        }
+        return ans
+    }
 }
 
 fun main() {
@@ -1610,7 +1696,9 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4))) // 5
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
-    println(item.maxSum(intArrayOf(2, 4, 5, 8, 10), intArrayOf(4, 6, 8, 9)))
+    //println(item.reorderSpaces("  this   is  a sentence ").replace(" ","+"))
+    //println(item.reorderSpaces(" practice   makes   perfect").replace(" ","+"))
+    println(item.restoreArray(arrayOf(intArrayOf(2, 1), intArrayOf(3, 4), intArrayOf(3, 2))))
 
 
 }
