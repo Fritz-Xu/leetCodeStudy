@@ -1676,6 +1676,7 @@ class ArraysCodeModel {
         }
         return ans
     }
+
 }
 
 fun main() {
@@ -1698,7 +1699,5 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
     //println(item.reorderSpaces("  this   is  a sentence ").replace(" ","+"))
     //println(item.reorderSpaces(" practice   makes   perfect").replace(" ","+"))
-    println(item.restoreArray(arrayOf(intArrayOf(2, 1), intArrayOf(3, 4), intArrayOf(3, 2))))
-
 
 }
