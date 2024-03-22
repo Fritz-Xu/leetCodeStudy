@@ -1677,6 +1677,36 @@ class ArraysCodeModel {
         return ans
     }
 
+    /**
+     * LeetCode 1764. 通过连接另一个数组的子数组得到一个数组(middle)
+     * 提示:双指针
+     **/
+    fun canChoose(groups: Array<IntArray>, nums: IntArray): Boolean {
+        var numsIndex = 0
+        var groupsIndex = 0
+        while (numsIndex < nums.size && groupsIndex < groups.size) {
+            while (numsIndex < nums.size && groups[groupsIndex][0] != nums[numsIndex]) {
+                numsIndex++
+            }
+            if (numsIndex > nums.size - 1) {
+                break
+            }
+            if (nums.size - numsIndex < groups[groupsIndex].size) {
+                numsIndex += groups[groupsIndex].size
+                break
+            }
+            val array = nums.sliceArray(IntRange(numsIndex, numsIndex + groups[groupsIndex].size - 1))
+            val checkArray = groups[groupsIndex]
+            if (array.contentEquals(checkArray)) {
+                numsIndex += groups[groupsIndex].size
+                groupsIndex++
+            } else {
+                numsIndex++
+            }
+        }
+        return groupsIndex == groups.size
+    }
+
 }
 
 fun main() {
@@ -1698,6 +1728,23 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
     //println(item.reorderSpaces("  this   is  a sentence ").replace(" ","+"))
-    //println(item.reorderSpaces(" practice   makes   perfect").replace(" ","+"))
+    println(
+        item.canChoose(
+            arrayOf(intArrayOf(1, -1, -1), intArrayOf(3, -2, 0)),
+            intArrayOf(1, -1, 0, 1, -1, -1, 3, -2, 0)
+        )
+    )
+    println(
+        item.canChoose(
+            arrayOf(intArrayOf(10,-2), intArrayOf(1,2,3,4)),
+            intArrayOf(1,2,3,4,10,-2)
+        )
+    )
+    println(
+        item.canChoose(
+            arrayOf(intArrayOf(1,2,3), intArrayOf(3,4)),
+            intArrayOf(7,7,1,2,3,4,7,7)
+        )
+    )
 
 }
