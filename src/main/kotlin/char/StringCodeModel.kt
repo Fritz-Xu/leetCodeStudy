@@ -24,11 +24,7 @@ class StringCodeModel {
             if ((c == '(' || c == '{' || c == '[')) {
                 linkList.offer(c)
             } else {
-                if (
-                    last == '(' && c != ')'
-                    || last == '{' && c != '}'
-                    || last == '[' && c != ']'
-                ) {
+                if (last == '(' && c != ')' || last == '{' && c != '}' || last == '[' && c != ']') {
                     return false
                 } else if (linkList.isNotEmpty()) {
                     linkList.removeLast()
@@ -1113,20 +1109,13 @@ class StringCodeModel {
         var indexTarget = 0
         var indexItem = 0
         while (indexTarget < target.length || indexItem < item.length) {
-            if (indexTarget < target.length
-                && indexItem < item.length
+            if (indexTarget < target.length && indexItem < item.length
                 //两个字符串对上相同字符, 一起前进
                 && target[indexTarget] == item[indexItem]
             ) {
                 indexTarget++
                 indexItem++
-            } else if ((indexTarget in 2..<target.length
-                        && target[indexTarget] == target[indexTarget - 1]
-                        && target[indexTarget - 1] == target[indexTarget - 2])
-                || (indexTarget > 0 && indexTarget < target.length - 1
-                        && target[indexTarget] == target[indexTarget - 1]
-                        && target[indexTarget] == target[indexTarget + 1])
-            ) {
+            } else if ((indexTarget in 2..<target.length && target[indexTarget] == target[indexTarget - 1] && target[indexTarget - 1] == target[indexTarget - 2]) || (indexTarget > 0 && indexTarget < target.length - 1 && target[indexTarget] == target[indexTarget - 1] && target[indexTarget] == target[indexTarget + 1])) {
                 // 跳过 target 里面的连续相同字符
                 indexTarget++
             } else {
@@ -1160,10 +1149,9 @@ class StringCodeModel {
      *      中心扩展和双指针
      */
     fun pushDominoes(dominoes: String): String {
-        if (dominoes.length < 2
-            || !dominoes.contains("L") && !dominoes.contains("R")
-            || !dominoes.contains(".") && !dominoes.contains("R")
-            || !dominoes.contains(".") && !dominoes.contains("L")
+        if (dominoes.length < 2 || !dominoes.contains("L") && !dominoes.contains("R") || !dominoes.contains(".") && !dominoes.contains(
+                "R"
+            ) || !dominoes.contains(".") && !dominoes.contains("L")
         ) {
             return dominoes
         }
@@ -1294,8 +1282,8 @@ class StringCodeModel {
                 }
             }
         }
-        val check = (ans[s.length - 1] in '0'..'9' && ans[s.length - 2] in 'a'..'z')
-                || (ans[s.length - 2] in '0'..'9' && ans[s.length - 1] in 'a'..'z')
+        val check =
+            (ans[s.length - 1] in '0'..'9' && ans[s.length - 2] in 'a'..'z') || (ans[s.length - 2] in '0'..'9' && ans[s.length - 1] in 'a'..'z')
         if (!check) {
             return ""
         }
@@ -1369,6 +1357,63 @@ class StringCodeModel {
         return ans.toInt()
     }
 
+    /**
+     * LeetCode 2024. 考试的最大困扰度 (middle)
+     * 一位老师正在出一场由 n 道判断题构成的考试，每道题的答案为 true （用 'T' 表示）或者 false （用 'F' 表示）。
+     * 老师想增加学生对自己做出答案的不确定性，方法是 最大化 有 连续相同 结果的题数（也就是连续出现 true 或者连续出现 false）
+     * 给你一个字符串 answerKey(要么是 'T' ，要么是 'F') ，其中 answerKey[i] 是第 i 个问题的正确结果
+     * 除此以外，还给你一个整数 k(最大是answerKey.length) ，表示你能进行以下操作的最多次数：
+     * 每次操作中，将问题的正确答案改为 'T' 或者 'F' （也就是将 answerKey[i] 改为 'T' 或者 'F' ）。
+     * 请你返回在不超过 k 次操作的情况下，最大 连续 'T' 或者 'F' 的数目。
+     *
+     * 示例 1：
+     * 输入：answerKey = "TTFF", k = 2
+     * 输出：4
+     * 解释：我们可以将两个 'F' 都变为 'T' ，得到 answerKey = "TTTT" 。
+     * 总共有四个连续的 'T' 。
+     * 示例 2：
+     * 输入：answerKey = "TFFT", k = 1
+     * 输出：3
+     * 解释：我们可以将最前面的 'T' 换成 'F' ，得到 answerKey = "FFFT" 。
+     * 或者，我们可以将第二个 'T' 换成 'F' ，得到 answerKey = "TFFF" 。
+     * 两种情况下，都有三个连续的 'F' 。
+     * 示例 3：
+     * 输入：answerKey = "TTFTTFTT", k = 1
+     * 输出：5
+     * 解释：我们可以将第一个 'F' 换成 'T' ，得到 answerKey = "TTTTTFTT" 。
+     * 或者我们可以将第二个 'F' 换成 'T' ，得到 answerKey = "TTFTTTTT" 。
+     * 两种情况下，都有五个连续的 'T' 。
+     */
+    fun maxConsecutiveAnswers(answerKey: String, k: Int): Int {
+        //分别统计出 T 和 F 最大连续长度,在 +k 的情况下
+        return max(
+            maxConsecutiveAnswersGetSameCharLength(answerKey, 'T', k),
+            maxConsecutiveAnswersGetSameCharLength(answerKey, 'F', k)
+        )
+    }
+
+    private fun maxConsecutiveAnswersGetSameCharLength(s: String, c: Char, k: Int): Int {
+        var ans = 0
+        var index = 0
+        var position = 0
+        var count = 0
+        while (index < s.length) {
+            if (s[index] == c) {
+                count++
+            }
+            while (count > k) {
+                if (s[position] == c) {
+                    count--
+                }
+                position++
+            }
+            ans = max(ans, (index - position + 1))
+            index++
+        }
+        return ans
+    }
+
+
 }
 
 fun main(args: Array<String>) {
@@ -1378,7 +1423,12 @@ fun main(args: Array<String>) {
 //    println(item.pushDominoes("RR.L")) //RR.L
 //    println(item.pushDominoes("RLR")) //RLR
 //    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
-    println(item.isPrefixOfWord("i love eating burger", "burg"))
+    println(item.maxConsecutiveAnswers("TTFF", 2))//4
+    println(item.maxConsecutiveAnswers("TFFT", 1))//3
+    println(item.maxConsecutiveAnswers("TTFTTFTT", 1))//5
+    println(item.maxConsecutiveAnswers("TTTTTFTFFT", 1))//8
+
+
 }
 
 
