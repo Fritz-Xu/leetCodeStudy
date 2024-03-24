@@ -1413,7 +1413,13 @@ class StringCodeModel {
         return ans
     }
 
-
+    /**
+     * LeetCode 2047. 句子中的有效单词数 (easy)
+     */
+    fun countValidWords(sentence: String): Int {
+        val regex = Regex("(?<=^| )(([a-z]+|[a-z]+-[a-z]+)[,!.]?|[,!.])(?=$| )")
+        return regex.findAll(sentence).count()
+    }
 }
 
 fun main(args: Array<String>) {
@@ -1423,10 +1429,7 @@ fun main(args: Array<String>) {
 //    println(item.pushDominoes("RR.L")) //RR.L
 //    println(item.pushDominoes("RLR")) //RLR
 //    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
-    println(item.maxConsecutiveAnswers("TTFF", 2))//4
-    println(item.maxConsecutiveAnswers("TFFT", 1))//3
-    println(item.maxConsecutiveAnswers("TTFTTFTT", 1))//5
-    println(item.maxConsecutiveAnswers("TTTTTFTFFT", 1))//8
+    println(item.countValidWords("he bought 2 pencils, 3 erasers, and 1  pencil-sharpener."))//6
 
 
 }
