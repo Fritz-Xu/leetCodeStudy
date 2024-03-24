@@ -1707,6 +1707,37 @@ class ArraysCodeModel {
         return groupsIndex == groups.size
     }
 
+    /**
+     * LeetCode 2760. 最长奇偶子数组(easy)
+     * https://leetcode.cn/problems/longest-even-odd-subarray-with-threshold/description/
+     * 分组循环的模板如下：
+     * n = len(nums)
+     * i = 0
+     * while i < n:
+     *     start = i
+     *     while i < n and ...:
+     *         i += 1
+     *     # 从 start 到 i-1 是一组
+     *     # 下一组从 i 开始，无需 i += 1
+     *
+     */
+    fun longestAlternatingSubarray(nums: IntArray, threshold: Int): Int {
+        var left = 0
+        var ans = 0
+        while (left < nums.size) {
+            if (nums[left] >= threshold || nums[left] % 2 != 0) {
+                left++
+                continue
+            }
+            var right = left + 1
+            while (right < nums.size && nums[right] < threshold && nums[right] % 2 != nums[right - 1] % 2) {
+                right++
+            }
+            ans = max(ans, right - left)
+        }
+        return ans
+    }
+
 }
 
 fun main() {
@@ -1736,14 +1767,14 @@ fun main() {
     )
     println(
         item.canChoose(
-            arrayOf(intArrayOf(10,-2), intArrayOf(1,2,3,4)),
-            intArrayOf(1,2,3,4,10,-2)
+            arrayOf(intArrayOf(10, -2), intArrayOf(1, 2, 3, 4)),
+            intArrayOf(1, 2, 3, 4, 10, -2)
         )
     )
     println(
         item.canChoose(
-            arrayOf(intArrayOf(1,2,3), intArrayOf(3,4)),
-            intArrayOf(7,7,1,2,3,4,7,7)
+            arrayOf(intArrayOf(1, 2, 3), intArrayOf(3, 4)),
+            intArrayOf(7, 7, 1, 2, 3, 4, 7, 7)
         )
     )
 
