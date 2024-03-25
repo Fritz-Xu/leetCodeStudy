@@ -1739,6 +1739,16 @@ class ArraysCodeModel {
 
     /**
      * LeetCode 2110. 股票平滑下跌阶段的数目(middle)
+     * 套用分组循环的模板
+     * 分组循环的模板如下：
+     *      * n = len(nums)
+     *      * i = 0
+     *      * while i < n:
+     *      *     start = i
+     *      *     while i < n and ...:
+     *      *         i += 1
+     *      *     # 从 start 到 i-1 是一组
+     *      *     # 下一组从 i 开始，无需 i += 1
      */
     fun getDescentPeriods(prices: IntArray): Long {
         var ans = 0L + prices.size
@@ -1757,7 +1767,37 @@ class ArraysCodeModel {
         return ans
     }
 
-
+    /**
+     * LeetCode 2765. 最长交替子数组(easy)
+     * 套用分组循环的模板
+     * 分组循环的模板如下：
+     *      * n = len(nums)
+     *      * i = 0
+     *      * while i < n:
+     *      *     start = i
+     *      *     while i < n and ...:
+     *      *         i += 1
+     *      *     # 从 start 到 i-1 是一组
+     *      *     # 下一组从 i 开始，无需 i += 1
+     */
+    fun alternatingSubarray(nums: IntArray): Int {
+        var ans = -1
+        var index = 0
+        while (index < nums.size) {
+            var position = index
+            position++
+            var result = 1
+            while (position < nums.size && nums[position] - nums[position - 1] == result) {
+                result *= -1
+                position++
+            }
+            if (position - index > 1){
+                ans = max(ans, position - index)
+            }
+            index++
+        }
+        return ans
+    }
 }
 
 fun main() {
@@ -1779,7 +1819,7 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
 //    println(item.getDescentPeriods(intArrayOf(3, 2, 1, 4)))//7
-    println(item.getDescentPeriods(intArrayOf(8, 6, 7, 7)))//4
+    println(item.alternatingSubarray(intArrayOf(21,9,5)))//4
 
 
 }
