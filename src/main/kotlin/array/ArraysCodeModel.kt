@@ -1737,7 +1737,25 @@ class ArraysCodeModel {
         return ans
     }
 
-
+    /**
+     * LeetCode 2110. 股票平滑下跌阶段的数目(middle)
+     */
+    fun getDescentPeriods(prices: IntArray): Long {
+        var ans = 0L + prices.size
+        var index = 0L
+        while (index < prices.size - 1) {
+            val position = index
+            index++
+            while (index < prices.size - 1 && prices[(index - 1).toInt()] - prices[index.toInt()] == 1) {
+                index++
+            }
+            //统计同资字符串的数量
+            val count = index - position
+            //统计最大子数组的组合数
+            ans += (1 + count) * count / 2
+        }
+        return ans
+    }
 
 }
 
@@ -1759,7 +1777,8 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4))) // 5
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
-    //println(item.reorderSpaces("  this   is  a sentence ").replace(" ","+"))
+//    println(item.getDescentPeriods(intArrayOf(3, 2, 1, 4)))//7
+    println(item.getDescentPeriods(intArrayOf(8, 6, 7, 7)))//4
 
 
 }
