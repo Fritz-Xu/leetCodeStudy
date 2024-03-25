@@ -1,7 +1,6 @@
 package array
 
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -1738,6 +1737,8 @@ class ArraysCodeModel {
         return ans
     }
 
+
+
 }
 
 fun main() {
@@ -1759,23 +1760,6 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
     //println(item.reorderSpaces("  this   is  a sentence ").replace(" ","+"))
-    println(
-        item.canChoose(
-            arrayOf(intArrayOf(1, -1, -1), intArrayOf(3, -2, 0)),
-            intArrayOf(1, -1, 0, 1, -1, -1, 3, -2, 0)
-        )
-    )
-    println(
-        item.canChoose(
-            arrayOf(intArrayOf(10, -2), intArrayOf(1, 2, 3, 4)),
-            intArrayOf(1, 2, 3, 4, 10, -2)
-        )
-    )
-    println(
-        item.canChoose(
-            arrayOf(intArrayOf(1, 2, 3), intArrayOf(3, 4)),
-            intArrayOf(7, 7, 1, 2, 3, 4, 7, 7)
-        )
-    )
+
 
 }

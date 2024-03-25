@@ -1420,6 +1420,26 @@ class StringCodeModel {
         val regex = Regex("(?<=^| )(([a-z]+|[a-z]+-[a-z]+)[,!.]?|[,!.])(?=$| )")
         return regex.findAll(sentence).count()
     }
+
+    /**
+     * LeetCode 2038. 如果相邻两个颜色均相同则删除当前颜色 (middle)
+     */
+    fun winnerOfGame(colors: String): Boolean {
+        val ans = IntArray(2)
+        var index = 0
+        while (index < colors.length) {
+            val position = index
+            val c = colors[position]
+            while (index < colors.length && colors[index] == c) {
+                index++
+            }
+            //统计 3 个以上的连续字符数量
+            if (index - position > 2) {
+                ans[c - 'A'] += index - position - 2
+            }
+        }
+        return ans[0] > ans[1]
+    }
 }
 
 fun main(args: Array<String>) {
