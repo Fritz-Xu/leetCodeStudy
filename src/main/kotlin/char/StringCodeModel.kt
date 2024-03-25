@@ -2,6 +2,7 @@ package char
 
 import java.util.*
 import kotlin.math.max
+import kotlin.math.min
 
 
 class StringCodeModel {
@@ -1440,6 +1441,26 @@ class StringCodeModel {
         }
         return ans[0] > ans[1]
     }
+
+    /**
+     * LeetCode 1578. 使绳子变成彩色的最短时间 (middle)
+     * https://leetcode.cn/problems/minimum-time-to-make-rope-colorful/description/
+     */
+    fun minCost(colors: String, neededTime: IntArray): Int {
+        var ans = 0
+        var index = 0
+        while (index < colors.length) {
+            val position = index
+            index++
+            while (index < colors.length && colors[index] == colors[position]) {
+                index++
+            }
+            val result = neededTime.sliceArray(IntRange(position, index - 1))
+            result.sort()
+            ans += result.take(result.size - 1).sum()
+        }
+        return ans
+    }
 }
 
 fun main(args: Array<String>) {
@@ -1449,8 +1470,10 @@ fun main(args: Array<String>) {
 //    println(item.pushDominoes("RR.L")) //RR.L
 //    println(item.pushDominoes("RLR")) //RLR
 //    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
-    println(item.countValidWords("he bought 2 pencils, 3 erasers, and 1  pencil-sharpener."))//6
-
+    println(item.minCost("abaac", intArrayOf(1, 2, 3, 4, 5)))//3
+    println(item.minCost("abc", intArrayOf(1, 2, 3)))//0
+    println(item.minCost("aabaa", intArrayOf(1, 2, 3, 4, 1)))//2
+    println(item.minCost("aaabbbabbbb", intArrayOf(3, 5, 10, 7, 5, 3, 5, 5, 4, 8, 1)))//26
 
 }
 
