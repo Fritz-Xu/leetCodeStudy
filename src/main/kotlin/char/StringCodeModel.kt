@@ -1461,6 +1461,37 @@ class StringCodeModel {
         }
         return ans
     }
+
+    /**
+     * LeetCode 1839. 所有元音按顺序排布的最长子字符串 (middle)
+     */
+    fun longestBeautifulSubstring(word: String): Int {
+        var ans = 0
+        var index = 0
+        while (index < word.length) {
+            val position = index
+            index++
+            while (index < word.length && longestBeautifulSubstringCheck(word[index - 1], word[index])) {
+                index++
+            }
+            if (word[index - 1] == 'u' && word[position] == 'a') {
+                val count = index - position
+                ans = max(ans, count)
+            }
+        }
+        return ans
+    }
+
+    private fun longestBeautifulSubstringCheck(c: Char, n: Char): Boolean {
+        return when (c) {
+            'a' -> n == 'a' || n == 'e'
+            'e' -> n == 'e' || n == 'i'
+            'i' -> n == 'i' || n == 'o'
+            'o' -> n == 'o' || n == 'u'
+            'u' -> n == 'u'
+            else -> false
+        }
+    }
 }
 
 fun main(args: Array<String>) {
@@ -1470,10 +1501,10 @@ fun main(args: Array<String>) {
 //    println(item.pushDominoes("RR.L")) //RR.L
 //    println(item.pushDominoes("RLR")) //RLR
 //    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
-    println(item.minCost("abaac", intArrayOf(1, 2, 3, 4, 5)))//3
-    println(item.minCost("abc", intArrayOf(1, 2, 3)))//0
-    println(item.minCost("aabaa", intArrayOf(1, 2, 3, 4, 1)))//2
-    println(item.minCost("aaabbbabbbb", intArrayOf(3, 5, 10, 7, 5, 3, 5, 5, 4, 8, 1)))//26
+//    println(item.minCost("abaac", intArrayOf(1, 2, 3, 4, 5)))//3
+    println(item.longestBeautifulSubstring("aeiaaioaaaaeiiiiouuuooaauuaeiu")) //13
+    println(item.longestBeautifulSubstring("aeeeiiiioooauuuaeiou")) //5
+
 
 }
 
