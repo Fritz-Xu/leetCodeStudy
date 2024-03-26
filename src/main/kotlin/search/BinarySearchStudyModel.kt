@@ -40,4 +40,25 @@ class BinarySearchStudyModel {
         }
         return findKth(nums1, result, nums2, key2, k - (result - key1))
     }
+
+    /**
+     * LeetCode 744.寻找比目标字母大的最小字母(easy)
+     * https://leetcode.cn/problems/find-smallest-letter-greater-than-target/
+     */
+    fun nextGreatestLetter(letters: CharArray, target: Char): Char {
+        if (letters[0] > target) {
+            return letters[0]
+        }
+        var start = 0
+        var end = letters.size - 1
+        while (start < end) {
+            val mid = (start + end) / 2
+            if (letters[mid] > target) {
+                end = mid
+            } else {
+                start = mid + 1
+            }
+        }
+        return if (letters[end] > target) letters[end] else letters[0]
+    }
 }
