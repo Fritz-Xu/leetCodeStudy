@@ -61,4 +61,47 @@ class BinarySearchStudyModel {
         }
         return if (letters[end] > target) letters[end] else letters[0]
     }
+
+    /**
+     * LeetCode 1351. 统计有序矩阵中的负数(easy)
+     * https://leetcode.cn/problems/count-negative-numbers-in-a-sorted-matrix/description
+     * 思路:二分查找 + 数组递减
+     */
+    fun countNegatives(grid: Array<IntArray>): Int {
+        var ans = 0
+        for (array in grid) {
+            if (array[0] < 0) {
+                ans += array.size
+                continue
+            }
+            if (array.last() >= 0) {
+                continue
+            }
+            var start = 0
+            var end = array.size - 1
+            while (start < end) {
+                val mid = (start + end) / 2
+                if (array[mid] >= 0) {
+                    start = mid + 1
+                } else {
+                    end = mid
+                }
+            }
+            ans += array.size - end
+        }
+        return ans
+    }
+}
+
+fun main() {
+    val item = BinarySearchStudyModel()
+    println(
+        item.countNegatives(
+            arrayOf(
+                intArrayOf(4, 3, 2, -1), intArrayOf(3, 2, 1, -1), intArrayOf(3, 2, 1, -1), intArrayOf(1, 1, -1, -2),
+                intArrayOf(-1, -1, -2, -3)
+            )
+        )
+    )
+    //println(item.countNegatives(arrayOf(intArrayOf(3, 2), intArrayOf(1, 0))))
 }
