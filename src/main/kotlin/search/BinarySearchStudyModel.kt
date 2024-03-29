@@ -1,5 +1,6 @@
 package search
 
+import java.util.Arrays
 import kotlin.math.min
 
 /**
@@ -91,17 +92,71 @@ class BinarySearchStudyModel {
         }
         return ans
     }
+
+    /**
+     * LeetCode 34. 在排序数组中查找元素的第一个和最后一个位置(middle)
+     * https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array
+     * 思路:二分查找
+     */
+    fun searchRange(nums: IntArray, target: Int): IntArray {
+        if (nums.size == 1) {
+            if (nums[0] == target) {
+                return intArrayOf(0, 0)
+            }
+            return intArrayOf(-1, -1)
+        }
+        if (nums.size == 2) {
+            if (nums[0] == target && nums[1] == target) {
+                return intArrayOf(0, 1)
+            }
+            if (nums[0] == target) {
+                return intArrayOf(0, 0)
+            }
+            if (nums[1] == target) {
+                return intArrayOf(1, 1)
+            }
+            return intArrayOf(-1, -1)
+        }
+        val ans = IntArray(2)
+        Arrays.fill(ans, -1)
+        var start = 0
+        var end = nums.size - 1
+        var index = -1
+        while (start <= end) {
+            val mid = (start + end) / 2
+            if (nums[mid] > target) {
+                end = mid - 1
+            } else if (nums[mid] < target) {
+                start = mid + 1
+            } else {
+                index = mid
+                break
+            }
+        }
+        if (index != -1) {
+            //说明找到了
+            start = index
+            end = index
+            while (start >= 0 && nums[start] == target) {
+                start--
+            }
+            while (end < nums.size && nums[end] == target) {
+                end++
+            }
+            ans[0] = start + 1
+            ans[1] = end - 1
+        }
+        return ans
+    }
 }
 
 fun main() {
     val item = BinarySearchStudyModel()
-    println(
-        item.countNegatives(
-            arrayOf(
-                intArrayOf(4, 3, 2, -1), intArrayOf(3, 2, 1, -1), intArrayOf(3, 2, 1, -1), intArrayOf(1, 1, -1, -2),
-                intArrayOf(-1, -1, -2, -3)
-            )
-        )
-    )
-    //println(item.countNegatives(arrayOf(intArrayOf(3, 2), intArrayOf(1, 0))))
+    //println(item.searchRange(intArrayOf(2, 2), 2))
+//    item.searchRange(intArrayOf(5,7,7,8,8,10), 8).forEach {
+//        print("$it,")
+//    }
+    item.searchRange(intArrayOf(1,2,3), 1).forEach {
+        print("$it,")
+    }
 }
