@@ -1,7 +1,8 @@
 package search
 
-import java.util.Arrays
+import java.util.*
 import kotlin.math.min
+
 
 /**
  * 二分查找
@@ -145,6 +146,24 @@ class BinarySearchStudyModel {
             }
             ans[0] = start + 1
             ans[1] = end - 1
+        }
+        return ans
+    }
+
+    /**
+     * LeetCode 436. 寻找右区间(middle)
+     * https://leetcode.cn/problems/find-right-interval/description
+     * 思路:二分查找
+     */
+    fun findRightInterval(intervals: Array<IntArray>): IntArray {
+        val ans = IntArray(intervals.size)
+        val cache = TreeMap<Int, Int>()
+        for (index in intervals.indices) {
+            cache[intervals[index][0]] = index
+        }
+        for (index in intervals.indices) {
+            val entry = cache.ceilingEntry(intervals[index][1])
+            ans[index] = if (entry == null) -1 else entry.value
         }
         return ans
     }
