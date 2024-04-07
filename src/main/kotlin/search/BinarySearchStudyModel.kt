@@ -6,6 +6,18 @@ import kotlin.math.min
 
 /**
  * 二分查找
+ * 闭区间的模板，也是通用模板:
+ * long l = 0, r = size - 1
+ * while (l < r) {
+ *     // 这里 + 1 是为了避免死循环
+ *     long mid = (l + r + 1) / 2
+ *     if (check(mid)) {
+ *         l = mid;
+ *     } else {
+ *         r = mid - 1;
+ *     }
+ * }
+ *
  */
 class BinarySearchStudyModel {
 
@@ -167,6 +179,52 @@ class BinarySearchStudyModel {
         }
         return ans
     }
+
+    /**
+     * leetCode 29. 两数相除(middle)
+     * https://leetcode.cn/problems/divide-two-integers/description/
+     */
+    fun divide(dividend: Int, divisor: Int): Int {
+        //避免溢出,使用 long
+        var x: Long = dividend.toLong()
+        var y: Long = divisor.toLong()
+        val isNeg = x > 0 && y < 0 || x < 0 && y > 0
+        if (x < 0) {
+            x = -x
+        }
+        if (y < 0) {
+            y = -y
+        }
+        var start = 0L
+        var end = x
+        while (start < end) {
+            val mid = (start + end + 1) / 2
+            if (divideMul(mid, y) <= x) {
+                start = mid
+            } else {
+                end = mid - 1
+            }
+        }
+        val ans = if (isNeg) -start else start
+        if (ans > Int.MAX_VALUE || ans < Int.MIN_VALUE) {
+            return Int.MAX_VALUE
+        }
+        return ans.toInt()
+    }
+
+    private fun divideMul(x: Long, y: Long): Long {
+        var k = y
+        var a = x
+        var ans = 0L
+        while (k > 0) {
+            if ((k and 1) == 1L) {
+                ans += x
+            }
+            k = k shr 1
+            a += a
+        }
+        return ans
+    }
 }
 
 fun main() {
@@ -175,7 +233,7 @@ fun main() {
 //    item.searchRange(intArrayOf(5,7,7,8,8,10), 8).forEach {
 //        print("$it,")
 //    }
-    item.searchRange(intArrayOf(1,2,3), 1).forEach {
+    item.searchRange(intArrayOf(1, 2, 3), 1).forEach {
         print("$it,")
     }
 }
