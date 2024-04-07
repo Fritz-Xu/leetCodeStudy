@@ -7,14 +7,15 @@ import kotlin.math.min
 /**
  * 二分查找
  * 闭区间的模板，也是通用模板:
- * long l = 0, r = size - 1
- * while (l < r) {
+ * var start = 0
+ * var end = size - 1
+ * while (start < end) {
  *     // 这里 + 1 是为了避免死循环
- *     long mid = (l + r + 1) / 2
+ *     long mid = (start + end + 1) / 2
  *     if (check(mid)) {
- *         l = mid;
+ *         start = mid;
  *     } else {
- *         r = mid - 1;
+ *         end = mid - 1;
  *     }
  * }
  *
