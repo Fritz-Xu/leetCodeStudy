@@ -20,6 +20,19 @@ import kotlin.math.min
  *     }
  * }
  *
+ * 开区间的模板
+ * var start = -1
+ * var end = nums.size - 1 // 开区间 (-1, n-1)
+ * while (start + 1 < end) { // 开区间不为空
+ *     val mid = start + (end - start) / 2
+ *     if (check(mid)) {
+ *         end = mid
+ *     } else {
+ *         start = mid
+ *     }
+ * }
+ * return end
+ *
  */
 class BinarySearchStudyModel {
 
@@ -277,6 +290,48 @@ class BinarySearchStudyModel {
             return target > last && nums[mid] >= target
         }
         return target > last || nums[mid] >= target
+    }
+
+    /**
+     * leetCode 162. 寻找峰值(middle)
+     */
+    fun findPeakElement(nums: IntArray): Int {
+        var start = -1
+        var end = nums.size - 1 // 开区间 (-1, n-1)
+        while (start + 1 < end) { // 开区间不为空
+            val mid = start + (end - start) / 2
+            if (nums[mid] > nums[mid + 1]) {
+                end = mid
+            } else {
+                start = mid
+            }
+        }
+        return end
+    }
+
+    /**
+     * leetCode 35. 搜索插入位置(easy)
+     */
+    fun searchInsert(nums: IntArray, target: Int): Int {
+        if (target < nums[0]) {
+            return 0
+        }
+        if (target > nums.last()) {
+            return nums.size - 1
+        }
+        var start = -1
+        var end = nums.size - 1
+        while (start + 1 < end) {
+            val mid = start + (end - start) / 2
+            if (nums[mid] > target) {
+                end = mid
+            } else if (nums[mid] < target) {
+                start = mid
+            } else {
+                return mid
+            }
+        }
+        return end
     }
 }
 

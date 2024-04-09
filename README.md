@@ -29,9 +29,24 @@ while (start <= end) {
     // 这里 + 1 是为了避免死循环
     long mid = (start + end + 1) / 2
     if (check(mid)) {
-        start = mid;
+        start = mid
     } else {
-        end = mid - 1;
+        end = mid - 1
     }
 }
+```
+
+#### 二分的开区间的模板
+```kotlin
+var start = -1
+var end = nums.size - 1 // 开区间 (-1, n-1)
+while (start + 1 < end) { // 开区间不为空
+    val mid = start + (end - start) / 2
+    if (check(mid)) {
+        end = mid
+    } else {
+        start = mid
+    }
+}
+return end
 ```
