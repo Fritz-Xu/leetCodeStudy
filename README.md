@@ -25,7 +25,7 @@ leetCode 刷题用
 ```kotlin
 var start = 0 
 var end = size - 1
-while (start < end) {
+while (start <= end) {
     // 这里 + 1 是为了避免死循环
     long mid = (start + end + 1) / 2
     if (check(mid)) {

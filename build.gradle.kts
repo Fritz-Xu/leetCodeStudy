@@ -15,6 +15,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     testImplementation("org.testng:testng:7.1.0")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.test {
@@ -27,4 +28,7 @@ tasks.withType<KotlinCompile> {
 
 application {
     mainClass.set("MainKt")
+}
+kotlin {
+    jvmToolchain(17)
 }

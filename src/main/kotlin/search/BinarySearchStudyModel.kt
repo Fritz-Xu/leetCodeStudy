@@ -1,6 +1,7 @@
 package search
 
 import java.util.*
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -9,7 +10,7 @@ import kotlin.math.min
  * 闭区间的模板，也是通用模板:
  * var start = 0
  * var end = size - 1
- * while (start < end) {
+ * while (start <= end) {
  *     // 这里 + 1 是为了避免死循环
  *     long mid = (start + end + 1) / 2
  *     if (check(mid)) {
@@ -225,6 +226,57 @@ class BinarySearchStudyModel {
             a += a
         }
         return ans
+    }
+
+    /**
+     * leetCode 33. 搜索旋转排序数组(middle)
+     * 尽量一次二分
+     */
+    fun search(nums: IntArray, target: Int): Int {
+        if (nums.isEmpty()) {
+            return -1
+        }
+        if (nums.size == 1) {
+            return if (nums[0] == target) 0 else -1
+        }
+        if (nums.size <= 3) {
+            return when (target) {
+                nums[0] -> {
+                    0
+                }
+
+                nums[1] -> {
+                    1
+                }
+
+                nums[min(2, nums.size - 1)] -> {
+                    2
+                }
+
+                else -> {
+                    -1
+                }
+            }
+        }
+        var start = 0
+        var end = nums.size - 1
+        while (start < end) {
+            val mid = (start + end + 1) / 2
+            if (searchByCheck(nums, target, mid)) {
+                end = mid
+            } else {
+                start = mid
+            }
+        }
+        return if (nums[start] == target) start else -1
+    }
+
+    private fun searchByCheck(nums: IntArray, target: Int, mid: Int): Boolean {
+        val last = nums.last()
+        if (nums[mid] > last) {
+            return target > last && nums[mid] >= target
+        }
+        return target > last || nums[mid] >= target
     }
 }
 
