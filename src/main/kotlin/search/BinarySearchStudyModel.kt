@@ -333,6 +333,34 @@ class BinarySearchStudyModel {
         }
         return end
     }
+
+    /**
+     * leetCode 74. 搜索二维矩阵(middle)
+     * https://leetcode.cn/problems/search-a-2d-matrix/
+     * 提示：把二维当成一维数组，然后二分查找
+     */
+    fun searchMatrix(matrix: Array<IntArray>, target: Int): Boolean {
+        val length = matrix[0].size
+        if (length == 1 && matrix.size == 1) {
+            return matrix[0][0] == target
+        }
+        var start = -1
+        var end = matrix.size * length - 1
+        while (start + 1 < end) {
+            val mid = start + (end - start) / 2
+            //间接转为一维
+            val result = matrix[mid / length][mid % length]
+            if (result < target) {
+                start = mid
+            } else if (result > target) {
+                end = mid
+            } else {
+                return true
+            }
+        }
+        //如果上面二分找不到,就判断最后的情况
+        return matrix[end / length][end % length] == target
+    }
 }
 
 fun main() {
@@ -341,7 +369,8 @@ fun main() {
 //    item.searchRange(intArrayOf(5,7,7,8,8,10), 8).forEach {
 //        print("$it,")
 //    }
-    item.searchRange(intArrayOf(1, 2, 3), 1).forEach {
-        print("$it,")
-    }
+//    item.searchRange(intArrayOf(1, 2, 3), 1).forEach {
+//        print("$it,")
+//    }
+    item.searchMatrix(arrayOf(intArrayOf(1, 3)), 3)
 }
