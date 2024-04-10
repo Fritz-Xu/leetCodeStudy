@@ -1492,6 +1492,22 @@ class StringCodeModel {
             else -> false
         }
     }
+
+    /**
+     * leetCode 1702. 修改后的最大二进制字符串(middle)
+     * https://leetcode.cn/problems/maximum-binary-string-after-change
+     */
+    fun maximumBinaryString(binary: String): String {
+        var index = binary.indexOf('0')
+        if (index < 0) {
+            return binary
+        }
+        var count = 0
+        for (position in ++index until binary.length) {
+            count += binary[position] - '0'
+        }
+        return "1".repeat(binary.length - 1 - count) + '0' + "1".repeat(count)
+    }
 }
 
 fun main(args: Array<String>) {
@@ -1502,8 +1518,7 @@ fun main(args: Array<String>) {
 //    println(item.pushDominoes("RLR")) //RLR
 //    println(item.pushDominoes(".L.R...LR..L.."))//LL.RR.LLRRLL..
 //    println(item.minCost("abaac", intArrayOf(1, 2, 3, 4, 5)))//3
-    println(item.longestBeautifulSubstring("aeiaaioaaaaeiiiiouuuooaauuaeiu")) //13
-    println(item.longestBeautifulSubstring("aeeeiiiioooauuuaeiou")) //5
+    println(item.maximumBinaryString("1100")) //1110
 
 
 }
