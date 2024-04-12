@@ -361,6 +361,28 @@ class BinarySearchStudyModel {
         //如果上面二分找不到,就判断最后的情况
         return matrix[end / length][end % length] == target
     }
+
+    /**
+     * leetCode 154. 寻找旋转排序数组中的最小值 II(hard)
+     * https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array-ii/
+     */
+    fun findMin(nums: IntArray): Int {
+        var start = -1
+        var end = nums.size - 1
+        while (start + 1 < end) {
+            val mid = start + (end - start) / 2
+            if (nums[mid] < nums[end]) {
+                //旋转数组，元素不重复时可以这么判断是否靠近右边
+                end = mid
+            } else if(nums[mid] == nums[end]){
+                //针对相同的元素情况
+                end--
+            } else {
+                start = mid
+            }
+        }
+        return nums[end]
+    }
 }
 
 fun main() {
