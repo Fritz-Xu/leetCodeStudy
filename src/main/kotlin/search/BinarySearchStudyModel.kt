@@ -1,7 +1,6 @@
 package search
 
 import java.util.*
-import kotlin.math.max
 import kotlin.math.min
 
 
@@ -374,7 +373,7 @@ class BinarySearchStudyModel {
             if (nums[mid] < nums[end]) {
                 //旋转数组，元素不重复时可以这么判断是否靠近右边
                 end = mid
-            } else if(nums[mid] == nums[end]){
+            } else if (nums[mid] == nums[end]) {
                 //针对相同的元素情况
                 end--
             } else {
@@ -383,6 +382,43 @@ class BinarySearchStudyModel {
         }
         return nums[end]
     }
+
+    /**
+     * leetCode 74. 搜索二维矩阵II(middle)
+     * https://leetcode.cn/problems/search-a-2d-matrix-ii/
+     *
+     */
+    fun searchMatrix2(matrix: Array<IntArray>, target: Int): Boolean {
+        val size = matrix.size
+        if (size == 1) {
+            if (matrix[0].size == 1) {
+                return matrix[0][0] == target
+            }
+            if (matrix[0].size == 2) {
+                return matrix[0][1] == target || matrix[0][0] == target
+            }
+        }
+        for (index in 0 until size) {
+            val array = matrix[index]
+            if (array.size == 1 && array[0] == target) {
+                return true
+            }
+            var start = 0
+            var end = array.size - 1
+            while (start <= end) { // 开区间不为空
+                val mid = start + (end - start) / 2
+                if (array[mid] > target) {
+                    end = mid - 1
+                } else if (array[mid] < target) {
+                    start = mid + 1
+                } else {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
 }
 
 fun main() {
@@ -394,5 +430,5 @@ fun main() {
 //    item.searchRange(intArrayOf(1, 2, 3), 1).forEach {
 //        print("$it,")
 //    }
-    item.searchMatrix(arrayOf(intArrayOf(1, 3)), 3)
+    println(item.searchMatrix2(arrayOf(intArrayOf(1, 3, 5)), 5))
 }
