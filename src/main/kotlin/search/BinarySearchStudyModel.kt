@@ -419,7 +419,78 @@ class BinarySearchStudyModel {
         return false
     }
 
+    /**
+     * leetCode 274. H 指数(middle)
+     * https://leetcode.cn/problems/h-index/
+     */
+    fun hIndex(citations: IntArray): Int {
+        if (citations.size == 1) {
+            return if (citations[0] <= 0) 0 else 1
+        }
+        var start = 0
+        var end = citations.size
+        while (start < end) {
+            val mid = (start + end + 1) / 2
+            if (hIndexCheck(citations, mid)) {
+                start = mid
+            } else {
+                end = mid - 1
+            }
+        }
+        return end
+    }
+
+    private fun hIndexCheck(citations: IntArray, mid: Int): Boolean {
+        var ans = 0
+        citations.forEach {
+            if (it >= mid) {
+                ans++
+            }
+        }
+        return ans >= mid
+    }
+
+    /**
+     * leetCode 367. 有效的完全平方数(easy)
+     * https://leetcode.cn/problems/valid-perfect-square
+     */
+    fun isPerfectSquare(num: Int): Boolean {
+        var start = 0L
+        var end = num.toLong()
+        while (start < end) {
+            val mid = (start + end + 1) / 2L
+            if (mid * mid <= num) start = mid
+            else end = mid - 1L
+        }
+        return (start * start).toInt() == num
+    }
+
+    /**
+     * leetCode 2300. 咒语和药水的成功对数(middle)
+     */
+    fun successfulPairs(spells: IntArray, potions: IntArray, success: Long): IntArray {
+        potions.sort()
+        val ans = IntArray(spells.size)
+        spells.forEachIndexed { index, item ->
+            var start = -1
+            var end = potions.size - 1
+            while (start + 1 < end) {
+                val mid = start + (end - start)
+                //使用 long 防止溢出
+                val result = 1L * item * potions[mid]
+                if (result < success) {
+                    start = mid
+                } else {
+                    end = mid
+                }
+            }
+            //使用 long 防止溢出
+            ans[index] = if (1L * potions[end] * item < success) 0 else potions.size - end
+        }
+        return ans
+    }
 }
+
 
 fun main() {
     val item = BinarySearchStudyModel()
@@ -430,5 +501,8 @@ fun main() {
 //    item.searchRange(intArrayOf(1, 2, 3), 1).forEach {
 //        print("$it,")
 //    }
-    println(item.searchMatrix2(arrayOf(intArrayOf(1, 3, 5)), 5))
+    //[4,0,3]
+    (item.successfulPairs(intArrayOf(1, 2, 3, 4, 5, 6, 7), intArrayOf(1, 2, 3, 4, 5, 6, 7), 25)).forEach {
+        println("$it,")
+    }
 }

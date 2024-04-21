@@ -1791,12 +1791,33 @@ class ArraysCodeModel {
                 result *= -1
                 position++
             }
-            if (position - index > 1){
+            if (position - index > 1) {
                 ans = max(ans, position - index)
             }
             index++
         }
         return ans
+    }
+
+    /**
+     * LeetCode 334. 递增的三元子序列(middle)
+     * https://leetcode.cn/problems/increasing-triplet-subsequence
+     */
+    fun increasingTriplet(nums: IntArray): Boolean {
+        var pre = Int.MAX_VALUE
+        var cur = Int.MAX_VALUE
+        for (num in nums) {
+            if (num > cur) {
+                return true
+            }
+            if (num < pre) {
+                pre = num
+            }
+            if (num > pre) {
+                cur = num
+            }
+        }
+        return false
     }
 }
 
@@ -1819,7 +1840,7 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
 //    println(item.getDescentPeriods(intArrayOf(3, 2, 1, 4)))//7
-    println(item.alternatingSubarray(intArrayOf(21,9,5)))//4
+    println(item.increasingTriplet(intArrayOf(20,100,10,12,5,13)))//4
 
 
 }
