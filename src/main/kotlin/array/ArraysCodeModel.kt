@@ -1840,7 +1840,7 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
 //    println(item.getDescentPeriods(intArrayOf(3, 2, 1, 4)))//7
-    println(item.increasingTriplet(intArrayOf(20,100,10,12,5,13)))//4
+    println(item.increasingTriplet(intArrayOf(20, 100, 10, 12, 5, 13)))//4
 
 
 }

@@ -489,6 +489,40 @@ class BinarySearchStudyModel {
         }
         return ans
     }
+
+    /**
+     * leetCode 2563. 统计公平数对的数目(middle)
+     * https://leetcode.cn/problems/count-the-number-of-fair-pairs/
+     * 提示：这里是统计数量，排序不影响答案，二分处理
+     */
+    fun countFairPairs(nums: IntArray, lower: Int, upper: Int): Long {
+        nums.sort()
+        var ans = 0L
+        nums.forEachIndexed { index,  item ->
+            //以 index 为终点，计算出小于 lower 的闭区间的起点
+            val start = countFairPairsFind(nums, index, lower - item)
+            //以 index 为终点，计算出大于 upper 的闭区间的终点
+            val end = countFairPairsFind(nums, index, upper - item + 1)
+            ans += end - start
+        }
+        return ans
+    }
+
+    private fun countFairPairsFind(nums: IntArray, item: Int, target: Int): Int {
+        var start = -1
+        var end = item
+        while (start + 1 < end) {
+            val mid = start + (end - start) / 2
+            if (nums[mid] < target) {
+                // 范围缩小到 (mid, right)
+                start = mid
+            } else {
+                // 范围缩小到 (left, mid)
+                end = mid
+            }
+        }
+        return end
+    }
 }
 
 
