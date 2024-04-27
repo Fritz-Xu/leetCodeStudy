@@ -1,6 +1,7 @@
 package search
 
 import java.util.*
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -498,7 +499,7 @@ class BinarySearchStudyModel {
     fun countFairPairs(nums: IntArray, lower: Int, upper: Int): Long {
         nums.sort()
         var ans = 0L
-        nums.forEachIndexed { index,  item ->
+        nums.forEachIndexed { index, item ->
             //以 index 为终点，计算出小于 lower 的闭区间的起点
             val start = countFairPairsFind(nums, index, lower - item)
             //以 index 为终点，计算出大于 upper 的闭区间的终点
@@ -522,6 +523,73 @@ class BinarySearchStudyModel {
             }
         }
         return end
+    }
+
+    /**
+     * leetCode 1283. 使结果不超过阈值的最小除数(middle)
+     * https://leetcode.cn/problems/find-the-smallest-divisor-given-a-threshold/
+     */
+    fun smallestDivisor(nums: IntArray, threshold: Int): Int {
+        var end = 1
+        nums.forEach { item ->
+            end = max(end, item)
+        }
+        //开始二分
+        var start = -1
+        while (start + 1 < end) {
+            val mid = start + (end - start) / 2
+            if (smallestDivisorCheck(nums, mid) > threshold) {
+                end = mid
+            } else {
+                start = mid
+            }
+        }
+        return end
+    }
+
+    private fun smallestDivisorCheck(nums: IntArray, mid: Int): Int {
+        var ans = 0
+        nums.forEach { item ->
+            ans += item / mid
+            //这里要向上取整
+            if (item % mid != 0) {
+                ans++
+            }
+        }
+        return ans
+    }
+
+    /**
+     * leetCode 2187. 完成旅途的最少时间(middle)
+     * https://leetcode.cn/problems/minimum-time-to-complete-trips
+     */
+    fun minimumTime(time: IntArray, totalTrips: Int): Long {
+        //找到耗时最少的时间
+        var minT = time.min().toLong()
+        var start = minT - 1
+        //这个是符合要求的最少耗时,也就是我们要找的 end
+        var end = totalTrips * minT
+        while (start + 1 < end) {
+            val mid = (start + end) / 2
+            if (minimumTimeCheck(mid, time, totalTrips)) {
+                end = mid
+            } else {
+                start = mid
+            }
+        }
+        //此时 start == end - 1
+        return end
+    }
+
+    private fun minimumTimeCheck(mid: Long, time: IntArray, totalTrips: Int): Boolean {
+        var ans = 0L
+        for (item in time) {
+            ans += mid / item
+            if (ans >= totalTrips) {
+                return true
+            }
+        }
+        return false
     }
 }
 
