@@ -1,6 +1,7 @@
 package search
 
 import java.util.*
+import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
@@ -591,6 +592,38 @@ class BinarySearchStudyModel {
         }
         return false
     }
+
+    /**
+     * leetCode 1870. 准时到达的列车最小时速(middle)
+     * https://leetcode.cn/problems/minimum-speed-to-arrive-on-time/
+     */
+    fun minSpeedOnTime(dist: IntArray, hour: Double): Int {
+        if (dist.size > ceil(hour)) return -1
+        // 搜索边界
+        var left = 1
+        var right = Int.MAX_VALUE
+        while (left < right) {
+            val mid = left + (right - left) / 2
+            // 如果以 mid 速度可达，那么就尝试减小速度
+            if (minSpeedOnTimeCheck(dist, hour, mid)) right = mid
+            else left = mid + 1
+        }
+        return left
+    }
+
+    private fun minSpeedOnTimeCheck(dist: IntArray, hour: Double, speed: Int): Boolean {
+        var cnt = 0.0
+        // 对除了最后一个站点以外的时间进行向上取整累加
+        for (i in 0 until dist.size - 1) {
+            // 除法的向上取整
+            cnt += ((dist[i] + speed - 1) / speed).toDouble()
+        }
+        // 加上最后一个站点所需的时间
+        cnt += dist[dist.size - 1].toDouble() / speed
+        return cnt <= hour
+    }
+
+
 }
 
 

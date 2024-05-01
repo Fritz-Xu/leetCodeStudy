@@ -1819,6 +1819,20 @@ class ArraysCodeModel {
         }
         return false
     }
+
+    /**
+     * leetCode 2798. 满足目标工作时长的员工数目(easy)
+     * https://leetcode.cn/problems/number-of-employees-who-met-the-target/
+     */
+    fun numberOfEmployeesWhoMetTarget(hours: IntArray, target: Int): Int {
+        var ans = 0
+        hours.forEach {
+            if (it >= target){
+                ans++
+            }
+        }
+        return ans
+    }
 }
 
 fun main() {
