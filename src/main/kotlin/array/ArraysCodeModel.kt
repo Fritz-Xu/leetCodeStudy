@@ -1827,12 +1827,49 @@ class ArraysCodeModel {
     fun numberOfEmployeesWhoMetTarget(hours: IntArray, target: Int): Int {
         var ans = 0
         hours.forEach {
-            if (it >= target){
+            if (it >= target) {
                 ans++
             }
         }
         return ans
     }
+
+    /**
+     * leetCode 2462. 雇佣 K 位工人的总代价(middle)
+     * https://leetcode.cn/problems/number-of-employees-who-met-the-target/
+     */
+    fun totalCost(costs: IntArray, k: Int, candidates: Int): Long {
+        val size = costs.size
+        var ans = 0L
+        if (k + candidates * 2 > size) {
+            costs.sort()
+            for (index in 0 until k) {
+                ans += costs[index]
+            }
+            return ans
+        }
+        //PriorityQueue,默认从小到大排序
+        val pre = PriorityQueue<Int>()
+        val suf = PriorityQueue<Int>()
+        for (index in 0 until candidates) {
+            pre.offer(costs[index])
+            suf.offer(costs[size - 1 - index])
+        }
+        var count = k
+        var start = candidates
+        var end = size - 1 - candidates
+        while (count-- > 0){
+            if (pre.peek() <= suf.peek()){
+                ans += pre.poll()
+                pre.offer(costs[start++])
+            } else {
+                ans += suf.poll()
+                suf.offer(costs[end--])
+            }
+        }
+        return ans
+    }
+
 }
 
 fun main() {
@@ -1854,7 +1891,7 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 0, 1, 1))) // 4
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
 //    println(item.getDescentPeriods(intArrayOf(3, 2, 1, 4)))//7
-    println(item.increasingTriplet(intArrayOf(20, 100, 10, 12, 5, 13)))//4
+//    println(item.increasingTriplet(intArrayOf(20, 100, 10, 12, 5, 13)))//4
 
 
 }

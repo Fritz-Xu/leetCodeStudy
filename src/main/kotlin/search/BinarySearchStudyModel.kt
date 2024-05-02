@@ -623,7 +623,6 @@ class BinarySearchStudyModel {
         return cnt <= hour
     }
 
-
 }
 
 
@@ -637,7 +636,4 @@ fun main() {
 //        print("$it,")
 //    }
     //[4,0,3]
-    (item.successfulPairs(intArrayOf(1, 2, 3, 4, 5, 6, 7), intArrayOf(1, 2, 3, 4, 5, 6, 7), 25)).forEach {
-        println("$it,")
-    }
 }
