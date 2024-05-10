@@ -303,6 +303,7 @@ class BinarySearchModel {
     fun findClosestElements(arr: IntArray, k: Int, x: Int): List<Int> {
         var start = 0
         //要找到 k 个连续元素,因此 end 最大值就是 arr.size - k
+        //避免越界
         var end = arr.size - k
         while (start < end) {
             val mid = start + (end - start) / 2
@@ -404,14 +405,14 @@ class BinarySearchModel {
         var a: Int
         var b: Int
         while (true) {
-            val mid = (start + end)/2
+            val mid = (start + end) / 2
             var cnt: Int
-            check(mid,arr).apply {
+            check(mid, arr).apply {
                 a = this[0]
                 b = this[1]
                 cnt = this[2]
             }
-            if (cnt > k){
+            if (cnt > k) {
                 end = mid
             } else if (cnt < k) {
                 start = mid
@@ -419,7 +420,7 @@ class BinarySearchModel {
                 break
             }
         }
-        return intArrayOf(a,b)
+        return intArrayOf(a, b)
     }
 
     private fun check(x: Double, arr: IntArray): IntArray {
@@ -445,13 +446,75 @@ class BinarySearchModel {
         }
         return intArrayOf(a, b, ans)
     }
+
+    /**
+     * leetCode 349. 两个数组的交集(easy)
+     * https://leetcode.cn/problems/intersection-of-two-arrays
+     */
+    fun intersection(nums1: IntArray, nums2: IntArray): IntArray {
+        return intersectionBySort(
+            if (nums1.size > nums2.size) nums1 else nums2,
+            if (nums1.size > nums2.size) nums2 else nums1
+        )
+    }
+
+    private fun intersectionBySort(longArr: IntArray, shortArr: IntArray): IntArray {
+        longArr.sort()
+        val list = mutableListOf<Int>()
+        shortArr.forEach { num ->
+            if (!list.contains(num)) {
+                if (intersectionBinarySearch(longArr, num) != -1) {
+                    list.add(num)
+                }
+            }
+        }
+        return list.toIntArray()
+    }
+
+    private fun intersectionBinarySearch(arr: IntArray, num: Int): Int {
+        var start = 0
+        var end = arr.size - 1
+        while (start <= end) {
+            val mid = start + (end - start) / 2
+            if (arr[mid] == num) {
+                return num
+            }
+            if (arr[mid] > num) {
+                end = mid - 1
+            } else {
+                start = mid + 1
+            }
+        }
+        return -1
+    }
+
+    fun intersect(nums1: IntArray, nums2: IntArray): IntArray {
+        val map = mutableMapOf<Int, Int>()
+        val list = mutableListOf<Int>()
+        for (index in nums1.indices) {
+            map[nums1[index]] = map.getOrDefault(nums1[index], 0) + 1
+        }
+        for (index in nums2.indices) {
+            if (map.getOrDefault(nums2[index], 0) != 0) {
+                list.add(nums2[index])
+                map[nums2[index]] = map[nums2[index]]!! - 1
+            }
+        }
+        val ans = IntArray(list.size)
+        for (index in ans.indices) {
+            ans[index] = list[index]
+        }
+        return ans
+    }
+
+
 }
 
 fun main() {
     val model = BinarySearchModel()
     //println(model.pivotIndex(intArrayOf(-1, 0, 1, -1, 0)))
     println()
-    model.kthSmallestPrimeFraction(intArrayOf(1,2,3,5), 3).forEach {
+    model.kthSmallestPrimeFraction(intArrayOf(1, 2, 3, 5), 3).forEach {
         print("$it,")
     }
 

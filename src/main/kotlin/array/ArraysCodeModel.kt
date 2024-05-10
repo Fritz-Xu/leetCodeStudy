@@ -1858,8 +1858,8 @@ class ArraysCodeModel {
         var count = k
         var start = candidates
         var end = size - 1 - candidates
-        while (count-- > 0){
-            if (pre.peek() <= suf.peek()){
+        while (count-- > 0) {
+            if (pre.peek() <= suf.peek()) {
                 ans += pre.poll()
                 pre.offer(costs[start++])
             } else {
@@ -1870,6 +1870,21 @@ class ArraysCodeModel {
         return ans
     }
 
+    /**
+     * leetCode 2960. 统计已测试设备(easy)
+     */
+    fun countTestedDevices(batteryPercentages: IntArray): Int {
+        var ans = 0
+        var count = 0
+        for (item in batteryPercentages) {
+            val result = item - count
+            if (result > 0) {
+                ans += result
+                count++
+            }
+        }
+        return ans
+    }
 }
 
 fun main() {
@@ -1892,6 +1907,6 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
 //    println(item.getDescentPeriods(intArrayOf(3, 2, 1, 4)))//7
 //    println(item.increasingTriplet(intArrayOf(20, 100, 10, 12, 5, 13)))//4
-
+    item.countTestedDevices(intArrayOf(3, 5, 1, 7))
 
 }

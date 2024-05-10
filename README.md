@@ -26,10 +26,13 @@ leetCode 刷题用
 var start = 0 
 var end = size - 1
 while (start <= end) {
-    // 这里 + 1 是为了避免死循环
-    long mid = (start + end + 1) / 2
+    // 这里 是为了避免死循环
+    long mid = start + (end - start) / 2
+    if (isTarget(mid)){
+        return mid
+    }
     if (check(mid)) {
-        start = mid
+        start = mid + 1
     } else {
         end = mid - 1
     }
