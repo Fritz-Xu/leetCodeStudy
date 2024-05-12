@@ -507,6 +507,48 @@ class BinarySearchModel {
         return ans
     }
 
+    /**
+     * leetCode 410. 分割数组的最大值(hard)
+     * https://leetcode.cn/problems/split-array-largest-sum/
+     * 提示：二分找最大
+     */
+    fun splitArray(nums: IntArray, k: Int): Int {
+        var sum = 0;
+        var mx = 0
+        nums.forEach { s ->
+            sum += s
+            mx = max(mx, s)
+        }
+        //锁定二分的范围
+        var start = max(mx - 1, ((sum) - 1) / k)
+        var end = sum
+        while (start + 1 < end) {
+            val mid = start + (end - start) / 2
+            if (splitArrayCheck(nums, k, mid)) {
+                end = mid
+            } else {
+                start = mid
+            }
+        }
+        return end
+    }
+
+    private fun splitArrayCheck(nums: IntArray, k: Int, data: Int): Boolean {
+        var cnt = 1
+        var s = 0
+        for (item in nums) {
+            if (s + item <= data) {
+                s += item
+            } else {
+                if (cnt == k) {
+                    return false
+                }
+                cnt += 1
+                s = item
+            }
+        }
+        return true
+    }
 
 }
 
@@ -514,8 +556,7 @@ fun main() {
     val model = BinarySearchModel()
     //println(model.pivotIndex(intArrayOf(-1, 0, 1, -1, 0)))
     println()
-    model.kthSmallestPrimeFraction(intArrayOf(1, 2, 3, 5), 3).forEach {
-        print("$it,")
-    }
+    println(model.splitArray(intArrayOf(7, 2, 5, 10, 8), 2))
+
 
 }

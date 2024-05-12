@@ -200,6 +200,7 @@ class BinarySearchStudyModel3 {
         }
         return start
     }
+
 }
 
 
