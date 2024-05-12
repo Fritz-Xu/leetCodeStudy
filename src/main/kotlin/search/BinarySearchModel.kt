@@ -550,6 +550,51 @@ class BinarySearchModel {
         return true
     }
 
+    /**
+     * leetCode 1011. 在 D 天内送达包裹的能力（middle）
+     * https://leetcode.cn/problems/capacity-to-ship-packages-within-d-days
+     */
+    fun shipWithinDays(weights: IntArray, days: Int): Int {
+        var max = 0
+        var sum = 0
+        //寻找最低运力,那么[start,ans)必然不满足要求，[ans,end)必然满足要求
+        //此时就有二分性
+        weights.forEach { s ->
+            max = s.coerceAtLeast(max)
+            sum += s
+        }
+        //要满足要求,最低运力就是数组最大值,最大运力就是数组之和
+        var start = max
+        var end = sum
+        while (start < end) {
+            val mid = start + (end - start) / 2
+            if (shipWithinDaysCheck(weights, mid, days)) {
+                end = mid
+            } else {
+                start = mid + 1
+            }
+        }
+        return end
+    }
+
+    private fun shipWithinDaysCheck(weights: IntArray, mid: Int, days: Int): Boolean {
+        var ans = 1
+        var sum = weights[0]
+        var index = 1
+        //模拟装货,计算装货的天数
+        while (index < weights.size) {
+            while (index < weights.size && sum + weights[index] <= mid) {
+                sum += weights[index]
+                index++
+            }
+            ans++
+            sum = 0
+        }
+        //判断是否超过了指定时间
+        return ans - 1 <= days
+    }
+
+
 }
 
 fun main() {
