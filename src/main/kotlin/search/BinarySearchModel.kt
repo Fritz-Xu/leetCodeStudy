@@ -4,6 +4,7 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sqrt
 
 
 /**
@@ -637,7 +638,7 @@ class BinarySearchModel {
         var ans = 0
         arr2.sort()
         for (item in arr1) {
-            val low  = item - d
+            val low = item - d
             val high = item + d
             if (!findTheDistanceValueBinarySearch(arr2, low, high)) {
                 ans++
@@ -662,7 +663,36 @@ class BinarySearchModel {
         return false
     }
 
-
+    /**
+     *2594. 修车的最少时间(middle)
+     * https://leetcode.cn/problems/minimum-time-to-repair-cars
+     */
+    fun repairCars(ranks: IntArray, cars: Int): Long {
+        var min = ranks[0]
+        ranks.forEach { s ->
+            min = s.coerceAtMost(min)
+        }
+        var start = 0L
+        //修车需要的最长时间
+        //这里min.toLong()为了避免损失精度
+        var end = min.toLong() * cars * cars
+        while (start < end) {
+            val mid = start + (end - start) / 2
+            var sum = 0L
+            ranks.forEach { s ->
+                //从公式 总时间 = 能力 * 汽车数量 * 汽车数量
+                //因此 时间 / 能力 == 汽车数量 * 汽车数量
+                //使用 sqrt 去平方
+                sum += sqrt((mid / s.toLong()).toDouble()).toLong()
+            }
+            if (sum >= cars) {
+                end = mid
+            } else {
+                start = mid + 1
+            }
+        }
+        return end
+    }
 }
 
 fun main() {
