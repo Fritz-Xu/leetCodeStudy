@@ -594,6 +594,74 @@ class BinarySearchModel {
         return ans - 1 <= days
     }
 
+    /**
+     * leetCode 875. 爱吃香蕉的珂珂(middle)
+     * https://leetcode.cn/problems/koko-eating-bananas
+     */
+    fun minEatingSpeed(piles: IntArray, h: Int): Int {
+        var max = 0
+        piles.forEach { s ->
+            max = s.coerceAtLeast(max)
+        }
+        //最小速度
+        var start = 1
+        //最大速度
+        var end = max
+        while (start < end) {
+            val mid = start + (end - start) / 2
+            if (minEatingSpeedCheck(piles, mid, h)) {
+                end = mid
+            } else {
+                start = mid + 1
+            }
+        }
+        return end
+    }
+
+    private fun minEatingSpeedCheck(piles: IntArray, k: Int, h: Int): Boolean {
+        //模拟吃香蕉,能否在 h 个小时内，每小时吃 k 条香蕉，把香蕉吃完
+        var sum = 0
+        piles.forEach { s ->
+            //除法,向上取整
+            sum += (s + k - 1) / k
+        }
+        //判断是不是吃个太快,这时候 end 要 减少了
+        return sum < h
+    }
+
+    /**
+     * leetCode  1385. 两个数组间的距离值(easy)
+     * https://leetcode.cn/problems/find-the-distance-value-between-two-arrays
+     */
+    fun findTheDistanceValue(arr1: IntArray, arr2: IntArray, d: Int): Int {
+        var ans = 0
+        arr2.sort()
+        for (item in arr1) {
+            val low  = item - d
+            val high = item + d
+            if (!findTheDistanceValueBinarySearch(arr2, low, high)) {
+                ans++
+            }
+        }
+        return ans
+    }
+
+    private fun findTheDistanceValueBinarySearch(arr: IntArray, low: Int, high: Int): Boolean {
+        var start = 0
+        var end = arr.size - 1
+        while (start <= end) {
+            val mid = start + (end - start) / 2
+            if (arr[mid] in low..high) {
+                return true
+            } else if (arr[mid] < low) {
+                start = mid + 1
+            } else if (arr[mid] > high) {
+                end = mid - 1
+            }
+        }
+        return false
+    }
+
 
 }
 
