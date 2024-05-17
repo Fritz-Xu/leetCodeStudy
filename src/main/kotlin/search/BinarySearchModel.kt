@@ -454,8 +454,7 @@ class BinarySearchModel {
      */
     fun intersection(nums1: IntArray, nums2: IntArray): IntArray {
         return intersectionBySort(
-            if (nums1.size > nums2.size) nums1 else nums2,
-            if (nums1.size > nums2.size) nums2 else nums1
+            if (nums1.size > nums2.size) nums1 else nums2, if (nums1.size > nums2.size) nums2 else nums1
         )
     }
 
@@ -693,6 +692,55 @@ class BinarySearchModel {
         }
         return end
     }
+
+    /**
+     * leetCode 1482. 制作 m 束花所需的最少天数(middle)
+     * https://leetcode.cn/problems/minimum-number-of-days-to-make-m-bouquets
+     */
+    fun minDays(bloomDay: IntArray, m: Int, k: Int): Int {
+        if (bloomDay.size / m < k) {
+            //判断每束花的数量是否满足要求
+            return -1
+        }
+        var start = bloomDay[0]
+        var end = bloomDay[0]
+        bloomDay.forEach { s ->
+            start = min(s, start)
+            end = max(s, end)
+        }
+        while (start < end) {
+            val mid = start + (end - start) / 2
+            if (minDaysCheck(bloomDay, mid, m, k)) {
+                end = mid
+            } else {
+                start = mid + 1
+            }
+        }
+        return end
+    }
+
+    private fun minDaysCheck(bloomDay: IntArray, days: Int, m: Int, k: Int): Boolean {
+        //计算此时开花的数量,能否满足 m 束花,然后每束花有 k 朵
+        //统计有几束花
+        var ans = 0L
+        //统计每束花的数量
+        var flowers = 0L
+        bloomDay.forEach { count ->
+            if (count <= days) {
+                //满足了开花的时间
+                flowers++
+                if (flowers >= k) {
+                    //满足了一束花的数量
+                    ans++
+                    flowers = 0
+                }
+            } else {
+                //不满足连续区间了
+                flowers = 0
+            }
+        }
+        return ans >= m
+    }
 }
 
 fun main() {
@@ -703,3 +751,49 @@ fun main() {
 
 
 }
+
+fun minDays(bloomDay: IntArray, m: Int, k: Int): Int {
+    val n = bloomDay.size
+    if (n / m < k) {
+        return -1
+    }
+    //找出二分查找上界和下界
+    var minDay = Int.MAX_VALUE
+    var maxDay = Int.MIN_VALUE
+    for (day in bloomDay) {
+        minDay = min(minDay, day)
+        maxDay = max(maxDay, day)
+    }
+    while (minDay < maxDay) {
+        val cur = minDay + (maxDay - minDay) / 2
+        if (checked(bloomDay, cur, m, k)) {
+            maxDay = cur
+        } else {
+            minDay = cur + 1
+        }
+    }
+    return minDay
+}
+
+fun checked(bloomDay: IntArray, cur: Int, m: Int, k: Int): Boolean {
+    var limit = m
+    val n = bloomDay.size
+    //用来统计相邻的可以用来制作花束的花朵数量
+    var count = 0
+    for (i in 0 until n) {
+        //当前花朵已开花，可以用作制作花束，并且累计相邻的连续量
+        if (bloomDay[i] <= cur) {
+            count++
+        } else {
+            count = 0
+        }
+        //累计可以制作一束花，那么就直接制作，(贪心想法
+        if (count == k) {
+            limit--
+            count = 0
+        }
+    }
+    return limit <= 0
+}
+
+
