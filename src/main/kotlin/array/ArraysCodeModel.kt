@@ -1885,6 +1885,38 @@ class ArraysCodeModel {
         }
         return ans
     }
+
+    /**
+     * leetCode 826. 安排工作以达到最大收益(middle)
+     * https://leetcode.cn/problems/most-profit-assigning-work
+     */
+    fun maxProfitAssignment(difficulty: IntArray, profit: IntArray, worker: IntArray): Int {
+        val jobs = Array(difficulty.size) {
+            IntArray(2)
+        }
+        //把difficulty 和 profit 的映射锁定在一个二维数组里面
+        for (index in difficulty.indices) {
+            jobs[index][0] = difficulty[index]
+            jobs[index][1] = profit[index]
+        }
+        //按照difficulty从小到大排序
+        Arrays.sort(jobs) { a, b -> a[0] - b[0] }
+        //worker也排序
+        worker.sort()
+        var ans = 0
+        var dimple = 0
+        var maxProfit = 0
+        worker.forEach { w ->
+            while (dimple < difficulty.size && jobs[dimple][0] <= w) {
+                //满足难度要求,找出最大利润
+                maxProfit = max(jobs[dimple][1], maxProfit)
+                dimple++
+            }
+            ans += maxProfit
+        }
+        return ans
+    }
+
 }
 
 fun main() {
