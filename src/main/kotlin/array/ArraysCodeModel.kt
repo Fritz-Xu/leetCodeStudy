@@ -1917,6 +1917,26 @@ class ArraysCodeModel {
         return ans
     }
 
+    /**
+     * leetCode 2644. 找出可整除性得分最大的整数(easy)
+     */
+    fun maxDivScore(nums: IntArray, divisors: IntArray): Int {
+        var ans = 0
+        var maxCount = 0
+        divisors.forEach {
+            var count = 0
+            nums.forEach { s ->
+                if (s % it == 0) {
+                    count++
+                }
+            }
+            if (count > maxCount || count == maxCount && ans > it) {
+                ans = it
+                maxCount = count
+            }
+        }
+        return ans
+    }
 }
 
 fun main() {
@@ -1939,6 +1959,7 @@ fun main() {
 //    println(item.totalFruit(intArrayOf(0, 1, 6, 6, 4, 4, 6))) // 5
 //    println(item.getDescentPeriods(intArrayOf(3, 2, 1, 4)))//7
 //    println(item.increasingTriplet(intArrayOf(20, 100, 10, 12, 5, 13)))//4
-    item.countTestedDevices(intArrayOf(3, 5, 1, 7))
+//    item.countTestedDevices(intArrayOf(3, 5, 1, 7))
+    println(item.maxDivScore(intArrayOf(20, 14, 21, 10), intArrayOf(5, 7, 5)))//5
 
 }
