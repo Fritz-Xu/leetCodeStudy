@@ -1937,6 +1937,27 @@ class ArraysCodeModel {
         }
         return ans
     }
+
+    /**
+     * leetCode 1535. 找出数组游戏的赢家(middle)
+     * https://leetcode.cn/problems/find-the-winner-of-an-array-game
+     */
+    fun getWinner(arr: IntArray, k: Int): Int {
+        var ans = arr[0]
+        var count = 0
+        var index = 1
+        while (index < arr.size && count < k){
+            val item = arr[index]
+            if (ans < arr[index]){
+                ans = item
+                count = 0
+            }
+            count++
+            index++
+        }
+        return ans
+    }
+
 }
 
 fun main() {
