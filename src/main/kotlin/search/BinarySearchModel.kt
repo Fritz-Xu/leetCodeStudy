@@ -741,6 +741,59 @@ class BinarySearchModel {
         }
         return ans >= m
     }
+
+    /**
+     * leetCode 3048. 标记所有下标的最早秒数 I(middle)
+     * https://leetcode.cn/problems/earliest-second-to-mark-indices-i/
+     */
+    fun earliestSecondToMarkIndices(nums: IntArray, changeIndices: IntArray): Int {
+        if (nums.size > changeIndices.size) {
+            return -1
+        }
+        val lastT = IntArray(nums.size)
+        var start = 0
+        var end = changeIndices.size + 1
+        while (start < end) {
+            val mid = start + (end - start) / 2
+            //模拟读秒
+            if (earliestSecondToMarkIndicesCheck(nums, changeIndices, lastT, mid)) {
+                end = mid
+            } else {
+                start = mid + 1
+            }
+        }
+        return if (end > changeIndices.size) -1 else end
+    }
+
+    private fun earliestSecondToMarkIndicesCheck(
+        nums: IntArray,
+        changeIndices: IntArray,
+        lastT: IntArray,
+        mid: Int
+    ): Boolean {
+        Arrays.fill(lastT, -1)
+        for (i in 0 until mid) {
+            lastT[changeIndices[i] - 1] = i
+        }
+        for (item in lastT) {
+            if (item < 0) {
+                return false
+            }
+        }
+        var ans = 0
+        for (i in 0 until mid) {
+            val idx = changeIndices[i] - 1
+            if (i == lastT[idx]){
+                if (nums[idx] > ans){
+                    return false
+                }
+                ans -= nums[idx]
+            } else {
+                ans++
+            }
+        }
+        return true
+    }
 }
 
 fun main() {
@@ -752,48 +805,5 @@ fun main() {
 
 }
 
-fun minDays(bloomDay: IntArray, m: Int, k: Int): Int {
-    val n = bloomDay.size
-    if (n / m < k) {
-        return -1
-    }
-    //找出二分查找上界和下界
-    var minDay = Int.MAX_VALUE
-    var maxDay = Int.MIN_VALUE
-    for (day in bloomDay) {
-        minDay = min(minDay, day)
-        maxDay = max(maxDay, day)
-    }
-    while (minDay < maxDay) {
-        val cur = minDay + (maxDay - minDay) / 2
-        if (checked(bloomDay, cur, m, k)) {
-            maxDay = cur
-        } else {
-            minDay = cur + 1
-        }
-    }
-    return minDay
-}
-
-fun checked(bloomDay: IntArray, cur: Int, m: Int, k: Int): Boolean {
-    var limit = m
-    val n = bloomDay.size
-    //用来统计相邻的可以用来制作花束的花朵数量
-    var count = 0
-    for (i in 0 until n) {
-        //当前花朵已开花，可以用作制作花束，并且累计相邻的连续量
-        if (bloomDay[i] <= cur) {
-            count++
-        } else {
-            count = 0
-        }
-        //累计可以制作一束花，那么就直接制作，(贪心想法
-        if (count == k) {
-            limit--
-            count = 0
-        }
-    }
-    return limit <= 0
-}
 
 
