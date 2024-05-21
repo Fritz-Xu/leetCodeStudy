@@ -783,8 +783,8 @@ class BinarySearchModel {
         var ans = 0
         for (i in 0 until mid) {
             val idx = changeIndices[i] - 1
-            if (i == lastT[idx]){
-                if (nums[idx] > ans){
+            if (i == lastT[idx]) {
+                if (nums[idx] > ans) {
                     return false
                 }
                 ans -= nums[idx]
@@ -793,6 +793,32 @@ class BinarySearchModel {
             }
         }
         return true
+    }
+
+    /**
+     * leetCode 2226. 每个小孩最多能分到多少糖果(middle)
+     * https://leetcode.cn/problems/maximum-candies-allocated-to-k-children
+     */
+    fun maximumCandies(candies: IntArray, k: Long): Int {
+        //每个孩子可以拿到的糖果数最小是1
+        var start = 1L
+        //每个孩子可以拿到的最大糖果数
+        var end = candies.max().toLong() + 1L
+        while (start < end) {
+            //二分,得到一个分给孩子糖果的数量
+            val mid = start + (end - start) / 2
+            //假设给每个孩子分mid数量的糖果,可以分给多少个孩子
+            val sum = candies.sumOf { it / mid }
+            //能分的孩子比k多,说明k个孩子拿到的糖果不够多
+            if (sum >= k) {
+                start = mid + 1
+            } else {
+                end = mid
+            }
+        }
+        //当 left < right 不再成立时，循环结束，返回 left.toInt() - 1，即找到的最大可分配糖果数减1
+        //因为 left 已经超过了满足条件的最大值，需要回退一步
+        return start.toInt() - 1
     }
 }
 
