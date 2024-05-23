@@ -820,16 +820,53 @@ class BinarySearchModel {
         //因为 left 已经超过了满足条件的最大值，需要回退一步
         return start.toInt() - 1
     }
+
+    /**
+     * leetCode1898. 可移除字符的最大数目(middle)
+     * https://leetcode.cn/problems/maximum-number-of-removable-characters/
+     */
+    fun maximumRemovals(s: String, p: String, removable: IntArray): Int {
+        var start = -1
+        var end = removable.size + 1
+        while (start + 1 < end) {
+            val mid = start + (end - start) / 2
+            if (maximumRemovalsCheck(s, p, removable, mid)) {
+                end = mid
+            } else {
+                start = mid
+            }
+        }
+        return start
+    }
+
+    private fun maximumRemovalsCheck(s: String, p: String, removable: IntArray, mid: Int): Boolean {
+        //判断如果删除 mid 个字符,p还是不是 s 的子字符串
+        val removed = BooleanArray(s.length)
+        for (i in 0 until mid ) {
+            removed[removable[i]] = true
+        }
+        var index = 0
+        var position = 0
+        while (index < s.length && position < p.length) {
+            if (s[index] == p[position] && !removed[index] ) {
+                position++
+            }
+            index++
+        }
+        return position != p.length
+    }
 }
 
 fun main() {
     val model = BinarySearchModel()
     //println(model.pivotIndex(intArrayOf(-1, 0, 1, -1, 0)))
     println()
-    println(model.splitArray(intArrayOf(7, 2, 5, 10, 8), 2))
+    println(model.maximumRemovals("qlevcvgzfpryiqlwy", "qlecfqlw", intArrayOf(12, 5)))
 
 
 }
+
+
 
 
 
