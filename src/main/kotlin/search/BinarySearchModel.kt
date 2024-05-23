@@ -1,10 +1,7 @@
 package search
 
 import java.util.*
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.sqrt
+import kotlin.math.*
 
 
 /**
@@ -842,27 +839,65 @@ class BinarySearchModel {
     private fun maximumRemovalsCheck(s: String, p: String, removable: IntArray, mid: Int): Boolean {
         //判断如果删除 mid 个字符,p还是不是 s 的子字符串
         val removed = BooleanArray(s.length)
-        for (i in 0 until mid ) {
+        for (i in 0 until mid) {
             removed[removable[i]] = true
         }
         var index = 0
         var position = 0
         while (index < s.length && position < p.length) {
-            if (s[index] == p[position] && !removed[index] ) {
+            if (s[index] == p[position] && !removed[index]) {
                 position++
             }
             index++
         }
         return position != p.length
     }
+
+
+    /**
+     * leetCode 1870. 准时到达的列车最小时速(middle)
+     * https://leetcode.cn/problems/minimum-speed-to-arrive-on-time/description/
+     */
+    fun minSpeedOnTime(dist: IntArray, hour: Double): Int {
+        //如果距离大于耗时,那么注定无法赶到
+        if (dist.size > ceil(hour)) {
+            return -1
+        }
+        var start = 1
+        var end = 1e7.toInt()
+        while (start < end) {
+            val mid = start + (end - start) / 2
+            if (minSpeedOnTimeCheck(dist, hour, mid)) {
+                end = mid
+            } else {
+                start = mid + 1
+            }
+        }
+        //需要判断这个速度是否可以准时赶到
+        return if (minSpeedOnTimeCheck(dist, hour, start)) start else -1
+    }
+
+    private fun minSpeedOnTimeCheck(dist: IntArray, hour: Double, mid: Int): Boolean {
+        //计算按照mid这个速度,能否在时间结束之前赶到公司
+        var res = 0.0
+        for (i in dist.indices) {
+            val cost = dist[i].toDouble() / mid
+            //最后一趟,不需要向上取整了
+            res += (if (i == dist.size - 1) cost else ceil(cost))
+        }
+        //是否可以赶到
+        return res <= hour
+    }
+
 }
 
 fun main() {
     val model = BinarySearchModel()
     //println(model.pivotIndex(intArrayOf(-1, 0, 1, -1, 0)))
     println()
-    println(model.maximumRemovals("qlevcvgzfpryiqlwy", "qlecfqlw", intArrayOf(12, 5)))
-
+    println(model.minSpeedOnTime(intArrayOf(1, 3, 2), 6.0))//1
+    println(model.minSpeedOnTime(intArrayOf(1, 3, 2), 2.7))//3
+    println(model.minSpeedOnTime(intArrayOf(1, 3, 2), 1.9))//-1
 
 }
 
