@@ -1946,9 +1946,9 @@ class ArraysCodeModel {
         var ans = arr[0]
         var count = 0
         var index = 1
-        while (index < arr.size && count < k){
+        while (index < arr.size && count < k) {
             val item = arr[index]
-            if (ans < arr[index]){
+            if (ans < arr[index]) {
                 ans = item
                 count = 0
             }
@@ -1956,6 +1956,29 @@ class ArraysCodeModel {
             index++
         }
         return ans
+    }
+
+    /**
+     * leetCode 2903. 找出满足差值条件的下标 I(easy)
+     */
+    fun findIndices(nums: IntArray, indexDifference: Int, valueDifference: Int): IntArray {
+        var maxIdx = 0
+        var minIdx = 0
+        for (index in indexDifference until nums.size) {
+            val i = index - indexDifference
+            if (nums[i] > nums[maxIdx]) {
+                maxIdx = i
+            } else if (nums[i] < nums[minIdx]) {
+                minIdx = i
+            }
+            if (nums[maxIdx] - nums[index] >= valueDifference) {
+                return intArrayOf(maxIdx, index)
+            }
+            if (nums[index] - nums[minIdx] >= valueDifference) {
+                return intArrayOf(minIdx, index)
+            }
+        }
+        return intArrayOf(-1, -1)
     }
 
 }
@@ -1981,6 +2004,5 @@ fun main() {
 //    println(item.getDescentPeriods(intArrayOf(3, 2, 1, 4)))//7
 //    println(item.increasingTriplet(intArrayOf(20, 100, 10, 12, 5, 13)))//4
 //    item.countTestedDevices(intArrayOf(3, 5, 1, 7))
-    println(item.maxDivScore(intArrayOf(20, 14, 21, 10), intArrayOf(5, 7, 5)))//5
 
 }

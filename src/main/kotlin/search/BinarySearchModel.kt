@@ -889,6 +889,50 @@ class BinarySearchModel {
         return res <= hour
     }
 
+    /**
+     * 1802. 有界数组中指定下标处的最大值
+     * https://leetcode.cn/problems/maximum-value-at-a-given-index-in-a-bounded-array/
+     */
+    fun maxValue(n: Int, index: Int, maxSum: Int): Int {
+        if (index == 0 && n == 1) {
+            return maxSum
+        }
+        if (n == maxSum){
+            return 1
+        }
+        var start = -1
+        var end = maxSum
+        while (start + 1 < end) {
+            val mid = start + (end - start) / 2
+            if (maxValueCheck(n, index, maxSum, mid)) {
+                end = mid
+            } else {
+                start = mid
+            }
+        }
+        return start
+    }
+
+    private fun maxValueCheck(n: Int, index: Int, maxSum: Int, mid: Int): Boolean {
+        //模拟构成数组,数组长度是 n ,最大值下标是 index,数组元素之和最大值是 maxSum
+        //分段,要求不超过元素之和maxSum并且单个元素abs(nums[i] - nums[i+1]) <= 1
+        //从 index 开始，左边减少 1 直到 1 为止,右边不断加 1
+        //然后计算出数组之和
+        val start = index
+        val end = n - index - 1
+        return mid + maxValueCheckCal(mid.toLong(), start.toLong()) + maxValueCheckCal(mid.toLong(), end.toLong()) > maxSum
+    }
+
+    private fun maxValueCheckCal(split: Long, length: Long): Long {
+        if (length + 1 < split) {
+            val small = split - length
+            return (split - 1 + small) * length / 2
+        } else {
+            val big = length - (split - 1)
+            return split * (split - 1) / 2 + big
+        }
+    }
+
 }
 
 fun main() {
