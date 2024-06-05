@@ -81,50 +81,51 @@ class HashCode {
      *提示:使用排序+双位移指针法+哨兵可以快速解决
      */
     fun threeSum(nums: IntArray): List<List<Int>> {
-        val result = mutableListOf<List<Int>>()
         if (nums.size < 3) {
-            //不足 3 个,不符合题目要求
-            return result
+            //剪枝,数组没有 3 个就返回空集合
+            return emptyList()
         }
-        //先从小到大排序
+        val ans = mutableListOf<List<Int>>()
+        //从小到大排序
         nums.sort()
-        for (index in 0..<nums.size - 2) {
-            //减2,是为了确保nums[index]后面一定有两个数,避免出现数组越界和重复数据
-            if (nums[index] > 0) {
-                //如果该数大于0，则从后面再找2个数，3个数的和必然大于0
+        for (index in 0 until nums.size - 2) {
+            //计算三数之和,因此减 2,避免计算越界
+            val item = nums[index]
+            if (item > 0) {
+                //已排序,因此该数大于0,则从后面再找2个数,3个数的和必然大于0
                 break
             }
-            if (index > 0 && nums[index - 1] == nums[index]) {
+            if (index > 0 && item == nums[index - 1]) {
                 //说明出现了重复元素了,这里避免出现重复,去重
                 continue
             }
             var start = index + 1
             var end = nums.size - 1
             while (start < end) {
-                //start < end ,这个是前提
+                //计算三数之和
                 val sum = nums[index] + nums[start] + nums[end]
-                when {
-                    sum > 0 -> {
-                        //如果三数之和大于0，则说明最大数nums[end]偏大了，end向左移
-                        end--
+                if (sum == 0) {
+                    //符合要求
+                    ans.add(listOf(nums[index], nums[start], nums[end]))
+                    while (start < end && nums[start] == nums[++start]) {
+                        //左指针前进,过滤重复数据
                     }
-                    sum == 0 -> {
-                        result.add(listOf(nums[index], nums[start], nums[end]))
-                        while (start < end && nums[start] == nums[++start]) {
-                            //左指针前进并去重
-                        }
-                        while (start < end && nums[end] == nums[--end]) {
-                            //右指针前进并去重
-                        }
+                    while (start < end && nums[end] == nums[--end]) {
+                        //右指针回退,过滤重复数据
                     }
-                    else -> {
-                        //如果三数之和小于0，则说明nums[start]偏小了，start向右移
-                        start++
-                    }
+                    continue
                 }
+                if (sum < 0) {
+                    //小于 0,start前进增大总和
+                    start++
+                    continue
+                }
+                //这时候就剩下 sum 大于 0 了
+                //end - 1 ,降低总和
+                end--
             }
         }
-        return result
+        return ans
     }
 }
 
@@ -137,7 +138,7 @@ fun main() {
 //        println()
 //    }
     println("----- [-2, -1, 0, 1, 2, 3]")
-    hash.threeSum(intArrayOf(-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6)).forEach { list ->
+    hash.threeSum(intArrayOf(-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6)).forEach { list ->
         list.forEach {
             print("$it,")
         }
