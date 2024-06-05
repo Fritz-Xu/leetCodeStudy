@@ -1981,6 +1981,23 @@ class ArraysCodeModel {
         return intArrayOf(-1, -1)
     }
 
+    /**
+     * leetCode 2104. 子数组范围和(middle)
+     * https://leetcode.cn/problems/sum-of-subarray-ranges/description/
+     */
+    fun subArrayRanges(nums: IntArray): Long {
+        var ans = 0L
+        nums.forEachIndexed { index, item ->
+            var maxValue = item
+            var minValue = item
+            for (position in index until nums.size) {
+                maxValue = max(nums[position], maxValue)
+                minValue = min(nums[position], minValue)
+                ans += maxValue - minValue
+            }
+        }
+        return ans
+    }
 }
 
 fun main() {
