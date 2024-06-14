@@ -1998,6 +1998,28 @@ class ArraysCodeModel {
         }
         return ans
     }
+
+    /**
+     * leetCode 56. 合并区间(middle)
+     */
+    fun merge(intervals: Array<IntArray>): Array<IntArray> {
+        if (intervals.size <= 1) {
+            return intervals
+        }
+        intervals.sortBy { it[0] }
+        val ans = mutableListOf<IntArray>()
+        ans.add(intervals[0])
+        for (index in 1 until intervals.size) {
+            //[1,3],[2,6] 这时候合并为[1,6]
+            //6>=3 && 3>=2
+            if (intervals[index][0] <= ans.last()[1]) {
+                ans.last()[1] = max(intervals[index][1], ans.last()[1])
+            } else {
+                ans.add(intervals[index])
+            }
+        }
+        return ans.toTypedArray()
+    }
 }
 
 fun main() {
