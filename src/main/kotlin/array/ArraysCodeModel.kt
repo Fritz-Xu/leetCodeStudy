@@ -2020,6 +2020,49 @@ class ArraysCodeModel {
         }
         return ans.toTypedArray()
     }
+
+    /**
+     * leetCode 316. 去除重复字母(middle)
+     * 给你一个字符串 s ，请你去除字符串中重复的字母，使得每个字母只出现一次。
+     * 需保证 返回结果的字典序最小（要求不能打乱其他字符的相对位置）。
+     *
+     * 示例 1：
+     * 输入：s = "bcabc"
+     * 输出："abc"
+     * 示例 2：
+     * 输入：s = "cbacdcbc"
+     * 输出："acdb"
+     * 提示：
+     * 1 <= s.length <= 104
+     * s 由小写英文字母组成
+     */
+    fun removeDuplicateLetters(s: String): String {
+        val freq = IntArray(26)
+        val inAns = BooleanArray(26)
+        freq.fill(0)
+        s.forEach {
+            freq[it - 'a']++
+        }
+        val ans = StringBuilder()
+        for (it in s) {
+            freq[it - 'a']--
+            if (inAns[it - 'a']) {
+                //要求不能有重复字母
+                continue
+            }
+            // 设 x = ans.charAt(ans.length() - 1)，
+            // 如果 c < x，且右边还有 x，那么可以把 x 去掉，因为后面可以重新把 x 加到 ans 中
+            while (ans.isNotEmpty() && it < ans.last() && freq[ans.last() - 'a'] > 0) {
+                // 标记 x 不在 ans 中
+                inAns[ans.last() - 'a'] = false
+                ans.deleteAt(ans.lastIndex)
+            }
+            ans.append(it)
+            inAns[it - 'a'] = true
+        }
+        return ans.toString()
+    }
+
 }
 
 fun main() {
