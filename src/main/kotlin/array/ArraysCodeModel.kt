@@ -2063,6 +2063,40 @@ class ArraysCodeModel {
         return ans.toString()
     }
 
+    /**
+     * 200. 岛屿数量
+     * https://leetcode.cn/problems/number-of-islands/description/
+     */
+    fun numIslands(grid: Array<CharArray>): Int {
+        var ans = 0
+        for (index in grid.indices) {
+            for (position in grid[0].indices) {
+                if (grid[index][position] == '1') {
+                    //找到陆地了,开始 dfs 找它上下左右的岛屿
+                    //岛屿 4 面都是水,也就是 0
+                    numIslandsDfs(grid, index, position)
+                    ans++
+                }
+            }
+        }
+        return ans
+    }
+
+    private fun numIslandsDfs(grid: Array<CharArray>, index: Int, position: Int) {
+        if (index < 0 || position < 0 || index >= grid.size || position >= grid[0].size || grid[index][position] == '0') {
+            return
+        }
+        grid[index][position] = '0'
+        //上
+        numIslandsDfs(grid, index, position - 1)
+        //下
+        numIslandsDfs(grid, index, position + 1)
+        //左
+        numIslandsDfs(grid, index - 1, position)
+        //右
+        numIslandsDfs(grid, index + 1, position)
+    }
+
 }
 
 fun main() {
