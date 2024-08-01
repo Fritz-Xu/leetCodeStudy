@@ -1,6 +1,7 @@
 package array
 
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -2097,10 +2098,50 @@ class ArraysCodeModel {
         numIslandsDfs(grid, index + 1, position)
     }
 
+    /**
+     * leetCode 083. 全排列(middle)
+     * https://leetcode.cn/problems/VvJkup/description/
+     */
+    fun permute(nums: IntArray): List<List<Int>> {
+        val result = ArrayList<ArrayList<Int>>()
+        permuteByDfs(ArrayList(), nums, BooleanArray(nums.size), result)
+        return result
+    }
+
+    private fun permuteByDfs(
+        state: ArrayList<Int>,
+        choices: IntArray,
+        selects: BooleanArray,
+        result: ArrayList<ArrayList<Int>>
+    ) {
+        if (state.size == choices.size) {
+            //达成条件,退出递归,copy 保存数据
+            result.add(ArrayList(state))
+            return
+        }
+        // 遍历所有选择
+        for (index in choices.indices) {
+            val choice = choices[index]
+            // 剪枝,不允许重复选择元素
+            if (!selects[index]) {
+                // 尝试做出选择并更新状态
+                selects[index] = true
+                state.add(choice)
+                //递归
+                permuteByDfs(state, choices, selects, result)
+                // 回退,撤销选择,恢复到之前的状态
+                selects[index] = false
+                state.removeAt(state.size - 1)
+            }
+        }
+    }
+
 }
 
 fun main() {
     val item = ArraysCodeModel()
+    val permute = item.permute(intArrayOf(1, 2, 3))
+    println(permute)
 //    println(item.findPairs(intArrayOf(3, 1, 4, 1, 5), 2))  //2
 //    println(item.findPairs(intArrayOf(1, 2, 3, 4, 5), 1))   //4
 //    println(item.findPairs(intArrayOf(1, 3, 1, 5, 4), 0))   // 1
