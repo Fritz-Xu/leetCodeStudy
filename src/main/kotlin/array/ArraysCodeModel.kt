@@ -2099,7 +2099,7 @@ class ArraysCodeModel {
     }
 
     /**
-     * leetCode 083. 全排列(middle)
+     * leetCode 046. 全排列(middle)
      * https://leetcode.cn/problems/VvJkup/description/
      */
     fun permute(nums: IntArray): List<List<Int>> {
@@ -2132,6 +2132,42 @@ class ArraysCodeModel {
                 // 回退,撤销选择,恢复到之前的状态
                 selects[index] = false
                 state.removeAt(state.size - 1)
+            }
+        }
+    }
+
+    /**
+     * leetCode 047. 全排列II(middle)
+     * https://leetcode.cn/problems/permutations-ii/description/
+     */
+    fun permuteUnique(nums: IntArray): List<List<Int>> {
+        val result = ArrayList<ArrayList<Int>>()
+        permuteUniqueByDfs(ArrayList(), nums, BooleanArray(nums.size), result)
+        return result
+    }
+
+    private fun permuteUniqueByDfs(
+        state: ArrayList<Int>,
+        choices: IntArray,
+        selects: BooleanArray,
+        result: ArrayList<ArrayList<Int>>
+    ) {
+        if (state.size == choices.size) {
+            result.add(ArrayList(state))
+            return
+        }
+        val set = mutableSetOf<Int>()
+        choices.forEachIndexed { index, item ->
+            if (set.contains(item)) {
+                return@forEachIndexed
+            }
+            if (!selects[index]){
+                set.add(item)
+                selects[index] = true
+                state.add(item)
+                permuteUniqueByDfs(state, choices, selects, result)
+                selects[index] = false
+                state.removeLastOrNull()
             }
         }
     }
