@@ -86,17 +86,39 @@ class BacktraceModel {
      */
     fun combinationSum(candidates: IntArray, target: Int): List<List<Int>> {
         val result = ArrayList<ArrayList<Int>>()
-        combinationSumDfs(ArrayList(), candidates, BooleanArray(candidates.size), result, target)
+        //子集和
+        val total = 0
+        //排序
+        candidates.sort()
+        combinationSumDfs(ArrayList(), candidates, result, total, target)
         return result
     }
 
     private fun combinationSumDfs(
         state: ArrayList<Int>,
         choices: IntArray,
-        selects: BooleanArray,
         result: ArrayList<ArrayList<Int>>,
+        start: Int,
         target: Int
     ) {
-
+        if (target == 0) {
+            //记录解答
+            result.add(ArrayList(state))
+            return
+        }
+        //从 start 开始遍历,避免生成重复子集
+        for (index in start..<choices.size) {
+            val item = choices[index]
+            //还差多少到原定目标值
+            val leftNumber = target - item
+            if (leftNumber < 0) {
+                //说明已经超过了原定目标值
+                //排序后,后边元素更大,子集和一定超过 原定目标值 target
+                break
+            }
+            state.add(item)
+            combinationSumDfs(state, choices, result, index, leftNumber)
+            state.removeLastOrNull()
+        }
     }
 }
