@@ -121,4 +121,52 @@ class BacktraceModel {
             state.removeLastOrNull()
         }
     }
+
+    /**
+     * leetCode 40. 组合总和 II(middle)
+     * https://leetcode.cn/problems/combination-sum-ii/
+     */
+    fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+        val result = ArrayList<ArrayList<Int>>()
+        //子集和
+        val total = 0
+        //排序
+        candidates.sort()
+        combinationSum2Dfs(ArrayList(), candidates, result, total, target)
+        return result
+    }
+
+    private fun combinationSum2Dfs(
+        state: ArrayList<Int>,
+        choices: IntArray,
+        result: ArrayList<ArrayList<Int>>,
+        start: Int,
+        target: Int
+    ) {
+        if (target == 0) {
+            //记录解答
+            result.add(ArrayList(state))
+            return
+        }
+        //从 start 开始遍历,避免生成重复子集
+        for (index in start..<choices.size) {
+            val item = choices[index]
+            //还差多少到原定目标值
+            val leftNumber = target - item
+            if (leftNumber < 0) {
+                //说明已经超过了原定目标值
+                //排序后,后边元素更大,子集和一定超过 原定目标值 target
+                break
+            }
+            if (index > start && choices[index] == choices[index - 1]) {
+                //如果该元素与左边元素相等,说明是使用过的重复元素,直接跳过
+                continue
+            }
+            state.add(item)
+            combinationSum2Dfs(state, choices, result, index + 1, leftNumber)
+            state.removeLastOrNull()
+        }
+    }
+
+
 }
