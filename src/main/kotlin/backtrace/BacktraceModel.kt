@@ -169,4 +169,51 @@ class BacktraceModel {
     }
 
 
+    /**
+     * leetCode 17. 电话号码的字母组合(middle)
+     * https://leetcode.cn/problems/letter-combinations-of-a-phone-number/
+     */
+    fun letterCombinations(digits: String): List<String> {
+        if (digits.isEmpty() || digits.toIntOrNull() == 1) {
+            return emptyList()
+        }
+        val letter = arrayOf("", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz")
+        val result = mutableListOf<String>()
+        if (digits.length == 1) {
+            //电话号码从 1 开始
+            letter[digits.toInt() - 1].forEach {
+                result.add(it.toString())
+            }
+            return result
+        }
+        letterCombinationsDfs(StringBuilder(), result, letter, digits, 0)
+        return result
+    }
+
+    private fun letterCombinationsDfs(
+        stringBuilder: StringBuilder,
+        result: MutableList<String>,
+        letter: Array<String>,
+        digits: String,
+        index: Int
+    ) {
+        if (index == digits.length) {
+            result.add(stringBuilder.toString())
+            return
+        }
+        //电话号码从 1 开始
+        letter[digits[index] - '1'].forEach {
+            stringBuilder.append(it)
+            letterCombinationsDfs(stringBuilder, result, letter, digits, index + 1)
+            stringBuilder.deleteAt(stringBuilder.length - 1)
+        }
+    }
+
+
+}
+
+fun main() {
+    val item = BacktraceModel()
+    val list = item.letterCombinations("23")
+    println(list)
 }
