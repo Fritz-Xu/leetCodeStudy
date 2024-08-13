@@ -3,6 +3,7 @@ package backtrace
 /**
  * 这里练习回溯的 leetCode
  * 全排列的两道题是最基础的回溯模板
+ * 回溯最好的学习方法： https://leetcode.cn/problems/restore-ip-addresses/solutions/100433/hui-su-suan-fa-hua-tu-fen-xi-jian-zhi-tiao-jian-by/
  */
 class BacktraceModel {
 
@@ -209,6 +210,54 @@ class BacktraceModel {
         }
     }
 
+    /**
+     * leetCode 93. 复原 IP 地址
+     * https://leetcode.cn/problems/restore-ip-addresses/description/
+     */
+    fun restoreIpAddresses(s: String): List<String> {
+        if (s.length < 4 || s.length > 12) {
+            return emptyList()
+        }
+        val result = mutableListOf<String>()
+        val builder = StringBuilder()
+        builder.append(s)
+        restoreIpAddressesBt(builder, result, 0, 0)
+        return result
+    }
+
+    private fun restoreIpAddressesBt(builder: StringBuilder, result: MutableList<String>, start: Int, position: Int) {
+        if (position == 3) {
+            if (restoreIpAddressesCheck(builder.substring(start, builder.length))) {
+                result.add(builder.toString())
+                return
+            }
+        }
+        for (index in start..<builder.length) {
+            if (restoreIpAddressesCheck(builder.substring(start, index + 1))) {
+                builder.insert(index + 1, ".")
+                restoreIpAddressesBt(builder, result, index + 2, position + 1)
+                builder.deleteAt(index + 1)
+            } else {
+                break
+            }
+        }
+    }
+
+    /**
+     * 判断字符串是否符合一个 ip 地址的一部分
+     * 位于 0 到 255 之间组成，且不能含有前导 0
+     */
+    private fun restoreIpAddressesCheck(s: String?): Boolean {
+        if (s.isNullOrEmpty()) {
+            return false
+        }
+        //不能有前导 0
+        if (s.startsWith("0") && s.length > 1) {
+            return false
+        }
+        //判断是否在 0 到 255之间
+        return (s.toIntOrNull() ?: -1) in 0..255
+    }
 
 }
 
