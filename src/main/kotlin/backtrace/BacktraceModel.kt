@@ -211,7 +211,7 @@ class BacktraceModel {
     }
 
     /**
-     * leetCode 93. 复原 IP 地址
+     * leetCode 93. 复原 IP 地址(middle)
      * https://leetcode.cn/problems/restore-ip-addresses/description/
      */
     fun restoreIpAddresses(s: String): List<String> {
@@ -259,6 +259,67 @@ class BacktraceModel {
         return (s.toIntOrNull() ?: -1) in 0..255
     }
 
+    /**
+     * leetCode 131. 分割回文串(middle)
+     * https://leetcode.cn/problems/palindrome-partitioning/description/
+     */
+    fun partition(s: String): List<List<String>> {
+        if (s.isEmpty()) {
+            return emptyList()
+        }
+        if (s.length == 1) {
+            return arrayListOf(listOf(s))
+        }
+        val result = ArrayList<ArrayList<String>>()
+        partitionBacktrace(ArrayList<String>(), result, s, 0, 0)
+        return result
+    }
+
+    private fun partitionBacktrace(
+        state: ArrayList<String>,
+        result: ArrayList<ArrayList<String>>,
+        s: String,
+        start: Int,
+        position: Int
+    ) {
+        if (position == s.length) {
+            //跳出递归
+            result.add(ArrayList(state))
+            return
+        }
+        if (position < s.length - 1) {
+            //这里不需要 for 循环,而且组装好字符串后再判断
+            partitionBacktrace(state, result, s, start, position + 1)
+        }
+        //判断是否回文字符串
+        val substring = s.substring(start, position + 1)
+        if (partitionCheck(substring)) {
+            state.add(substring)
+            partitionBacktrace(state, result, s, position + 1, position + 1)
+            state.removeLast()
+        }
+    }
+
+    private fun partitionCheck(s: String): Boolean {
+        //判断是否回文字符串
+        if (s.isEmpty()) {
+            return false
+        }
+        if (s.length == 1) {
+            return true
+        }
+        //这里判断是否回文字符串
+        var start = 0
+        var end = s.length - 1
+        while (start < end) {
+            if (s[start] != s[end]) {
+                return false
+            }
+            start++
+            end--
+        }
+        return true
+    }
 }
 
 fun main() {
