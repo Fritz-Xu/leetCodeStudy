@@ -4,7 +4,7 @@ import java.util.*
 import kotlin.math.min
 
 
-class DynamicCoinModel {
+class DynamicRunModel {
 
     /**
      * 给你一个整数数组 coins ，表示不同面额的硬币；以及一个整数 amount ，表示总金额。
@@ -27,6 +27,35 @@ class DynamicCoinModel {
         return if (dp[amount] == amount + 1) -1 else dp[amount]
     }
 
+    /**
+     * leetCode 509. 斐波那契数(简单)
+     * 斐波那契数公式 ：F(n)=F(n - 1)+F(n - 2)
+     * https://leetcode.cn/problems/fibonacci-number/description/
+     */
+    fun fib(n: Int): Int {
+        val mem = IntArray(n + 1).apply {
+            repeat(this.size) {
+                this[it] = -1
+            }
+        }
+        return fibDp(n, mem)
+    }
+
+    private fun fibDp(size: Int, mem: IntArray): Int {
+        if (size == 0) {
+            return 0
+        }
+        if (size <= 2) {
+            return 1
+        }
+        if (mem[size] != -1) {
+            return mem[size]
+        }
+        //斐波那契数公式 ：F(n)=F(n - 1)+F(n - 2)
+        val count = fibDp(size - 1, mem) + fibDp(size - 2, mem)
+        mem[size] = count
+        return count
+    }
 
 
 }
