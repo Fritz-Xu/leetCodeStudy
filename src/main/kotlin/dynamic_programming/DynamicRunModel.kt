@@ -28,7 +28,7 @@ class DynamicRunModel {
     }
 
     /**
-     * leetCode 509. 斐波那契数(简单)
+     * leetCode 509. 斐波那契数(easy)
      * 斐波那契数公式 ：F(n)=F(n - 1)+F(n - 2)
      * https://leetcode.cn/problems/fibonacci-number/description/
      */
@@ -57,5 +57,38 @@ class DynamicRunModel {
         return count
     }
 
+    /**
+     * leetCode 97. 交错字符串(middle)
+     * https://leetcode.cn/problems/interleaving-string/description/
+     */
+    fun isInterleave(s1: String, s2: String, s3: String): Boolean {
+        if (s1.length + s2.length != s3.length) {
+            //因为是判断 s1 + s2 通过组合拼接后的是否等于 s3
+            //所以一定满足 s1.length + s2.length == s3.length)
+            return false
+        }
+        //定义记忆画搜索
+        val cache = Array(s1.length + 10) { IntArray(s2.length + 10) }
+        return dfsIsInterleave(cache, s1, s2, s3, 0, 0)
+    }
 
+    private fun dfsIsInterleave(cache: Array<IntArray>, s1: String, s2: String, s3: String, i: Int, j: Int): Boolean {
+        if (cache[i][j] != 0) {
+            return cache[i][j] == 1
+        }
+        if (i + j == s3.length) {
+            return true
+        }
+        var ans = false
+        //定义状态转移方程,也就是递归函数
+        //这里就是 s3[i + j] = s1[i] + s2[j]
+        if (i < s1.length && s1[i] == s3[i + j]) {
+            ans = ans or dfsIsInterleave(cache, s1, s2, s3, i + 1, j)
+        }
+        if (j < s2.length && s2[j] == s3[i + j]) {
+            ans = ans or dfsIsInterleave(cache, s1, s2, s3, i, j + 1)
+        }
+        cache[i][j] = if (ans) 1 else -1
+        return ans
+    }
 }
