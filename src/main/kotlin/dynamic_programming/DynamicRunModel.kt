@@ -1,6 +1,7 @@
 package dynamic_programming
 
 import java.util.*
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -90,5 +91,90 @@ class DynamicRunModel {
         }
         cache[i][j] = if (ans) 1 else -1
         return ans
+    }
+
+    /**
+     * leetCode 198.打家劫舍(middle)
+     * https://leetcode.cn/problems/house-robber/description/
+     */
+    fun rob(nums: IntArray): Int {
+        if (nums.isEmpty()) {
+            return 0
+        }
+        if (nums.size == 1) {
+            return nums[0]
+        }
+        if (nums.size == 2) {
+            return max(nums[0], nums[1])
+        }
+        val cache = IntArray(nums.size).apply {
+            repeat(this.size) {
+                this[it] = -1
+            }
+        }
+        return dfsRob(nums, cache, nums.size - 1)
+    }
+
+    private fun dfsRob(nums: IntArray, cache: IntArray, index: Int): Int {
+        if (index < 0) {
+            //退出递归
+            return 0
+        }
+        if (cache[index] != -1) {
+            return cache[index]
+        }
+        //推倒的子问题公式
+        val res = max(dfsRob(nums, cache, index - 1), dfsRob(nums, cache, index - 2) + nums[index])
+        cache[index] = res
+        return res;
+    }
+
+    /**
+     * leetCode 213.打家劫舍2(middle)
+     * https://leetcode.cn/problems/house-robber-ii/description/
+     */
+    fun rob2(nums: IntArray): Int {
+        if (nums.isEmpty()) {
+            return 0
+        }
+        if (nums.size == 1) {
+            return nums[0]
+        }
+        if (nums.size == 2) {
+            return max(nums[0], nums[1])
+        }
+        val cache = IntArray(nums.size).apply {
+            repeat(this.size) {
+                this[it] = -1
+            }
+        }
+        val res = dfsRob2(nums, cache, 0, nums.size - 2)
+        repeat(cache.size) {
+            cache[it] = -1
+        }
+        return max(res, dfsRob2(nums, cache, 1, nums.size - 1))
+    }
+
+    private fun dfsRob2(nums: IntArray, cache: IntArray, start: Int, end: Int): Int {
+        if (start > end) {
+            //退出递归
+            return 0
+        }
+        if (cache[start] != -1) {
+            return cache[start]
+        }
+        //推倒的子问题公式
+        val res = max(dfsRob2(nums, cache, start + 1, end), dfsRob2(nums, cache, start + 2, end) + nums[start])
+        cache[start] = res
+        return res;
+    }
+
+
+    /**
+     * leetCode 375. 猜数字大小 II(middle)
+     * https://leetcode.cn/problems/interleaving-string/description/
+     */
+    fun getMoneyAmount(n: Int): Int {
+        return 0
     }
 }
