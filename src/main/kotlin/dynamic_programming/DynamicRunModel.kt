@@ -169,6 +169,35 @@ class DynamicRunModel {
         return res;
     }
 
+    /**
+     * 494.目标和(middle)
+     * https://leetcode.cn/problems/target-sum/description/
+     */
+    fun findTargetSumWays(nums: IntArray, target: Int): Int {
+        val cache = mutableMapOf<String, Int>()
+        return dfsFindTargetSumWays(nums, target, cache, 0, 0)
+    }
+
+    private fun dfsFindTargetSumWays(
+        nums: IntArray,
+        target: Int,
+        cache: MutableMap<String, Int>,
+        index: Int,
+        position: Int
+    ): Int {
+        val key = "${index}_${position}"
+        if (cache[key] != null) {
+            return cache[key]!!
+        }
+        if (index == nums.size) {
+            cache[key] = if (position == target) 1 else 0
+            return cache[key]!!
+        }
+        val left = dfsFindTargetSumWays(nums, target, cache, index + 1, position + nums[index])
+        val right = dfsFindTargetSumWays(nums, target, cache, index + 1, position - nums[index])
+        cache[key] = left + right
+        return cache[key]!!
+    }
 
     /**
      * leetCode 375. 猜数字大小 II(middle)
