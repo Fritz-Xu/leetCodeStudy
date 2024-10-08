@@ -10,6 +10,16 @@ class TreeCodeModel {
     }
 
     /**
+     * leetCode 100 判断两颗二叉树是否相同(easy)
+     */
+    fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
+        if (p == null || q == null) {
+            return p == q
+        }
+        return q.data == p.data && isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+    }
+
+    /**
      * leetCode 102. 二叉树的层序遍历（middle）
      *
      * 提示：树的基本功,广度搜素+分层，递归的开端,

@@ -16,7 +16,7 @@ class ArrayDifference(val nums: IntArray) {
 
     /**
      * 给数组区间添加某个值(value 是负数则为 1 减少)
-     * 返回新的修改后的数组(长度不变)
+     * 返回修改后的数组(长度不变)
      */
     fun increment(start: Int, end: Int, value: Int):IntArray {
         diff[start] += value
