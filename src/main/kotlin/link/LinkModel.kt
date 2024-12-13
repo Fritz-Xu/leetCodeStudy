@@ -144,51 +144,14 @@ class LinkModel {
      * 提示：返回数据是 node,链表长度是偶数或者奇数,因此可以使用快慢双指针
      */
     fun getIntersectionNode(headA: ListNode?, headB: ListNode?): ListNode? {
-        //差值法
-        var c1 = 0
-        var c2 = 0
-        var a = headA
-        var b = headB
-        var t1: ListNode? = a
-        var t2: ListNode? = b
-        while (t1 != null && ++c1 > 0) t1 = t1.next
-        while (t2 != null && ++c2 > 0) t2 = t2.next
-        var t = abs((c1 - c2).toDouble()).toInt()
-        while (t-- > 0) {
-            if (c1 > c2) a = a?.next else b = b?.next
-        }
-        while (a != null && b != null) {
-            if (a == b) {
-                return a
-            } else {
-                a = a.next
-                b = b.next
-            }
-        }
-        return null
-        //hash 法
-//        val set = mutableSetOf<ListNode>()
-//        var aNode = headA
-//        while (null != aNode) {
-//            set.add(aNode)
-//            aNode = aNode.next
-//        }
-//        var bNode = headB
-//        while (null != bNode) {
-//            if (set.contains(bNode)) {
-//                break
-//            }
-//            bNode = bNode.next
-//        }
-//        return bNode
         //双指针法
-//        var aNode = headA
-//        var bNode = headB
-//        while (aNode != bNode) {
-//            aNode = (aNode?.next)?:headB
-//            bNode = (bNode?.next)?:headA
-//        }
-//        return aNode
+        var aNode = headA
+        var bNode = headB
+        while (aNode != bNode) {
+            aNode = (aNode?.next) ?: headB
+            bNode = (bNode?.next) ?: headA
+        }
+        return aNode
     }
 
 
@@ -412,10 +375,10 @@ class LinkModel {
         var slow = head
         val dimple = slow
         //先让 fast 前进 n 步
-        repeat(n){
+        repeat(n) {
             fast = fast?.next
         }
-        if (fast == null){
+        if (fast == null) {
             //说明删除节点在前面
             return slow.next
         }
@@ -429,6 +392,44 @@ class LinkModel {
         //所以直接覆盖next节点, 实现删除
         slow?.next = slow?.next?.next
         return dimple
+    }
+
+    /**
+     * leetCode 25. K 个一组翻转链表(hard)
+     *
+     * 给你链表的头节点 head ，每 k 个节点一组进行翻转，请你返回修改后的链表。
+     * k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+     * 你不能只是单纯改变节点内部的值，而是需要实际进行节点交换。
+     *
+     * 示例1：
+     * 输入：head = [1,2,3,4,5], k = 2
+     * 输出：[2,1,4,3,5]
+     * 示例 2：
+     * 输入：head = [1,2,3,4,5], k = 3
+     * 输出：[3,2,1,4,5]
+     *
+     */
+    fun reverseKGroup(head: ListNode?, k: Int): ListNode? {
+        var p0 = head
+        //判断当前长度是否小于 k
+        for (index in 0..<k) {
+            if (p0 == null) {
+                return head
+            }
+            p0 = p0.next
+        }
+        var pre: ListNode? = null
+        var cur = head
+        var next = head
+        for (index in 0..<k) {
+            next = cur?.next
+            cur?.next = pre
+            pre = cur
+            cur = next
+        }
+        //继续下一组
+        head?.next = reverseKGroup(cur, k)
+        return pre
     }
 
 }
