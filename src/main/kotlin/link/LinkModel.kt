@@ -418,6 +418,7 @@ class LinkModel {
             }
             p0 = p0.next
         }
+        // 翻转k个链表
         var pre: ListNode? = null
         var cur = head
         var next = head
