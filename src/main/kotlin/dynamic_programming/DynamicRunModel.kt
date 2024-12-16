@@ -204,6 +204,7 @@ class DynamicRunModel {
      * https://leetcode.cn/problems/interleaving-string/description/
      */
     fun getMoneyAmount(n: Int): Int {
+        val dp = Array(n + 10) { IntArray(n + 10) }
         return 0
     }
 }
