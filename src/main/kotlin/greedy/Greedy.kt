@@ -37,4 +37,30 @@ class Greedy {
         }
         return (amount[0] + amount[1] + amount[2] + 1) / 2
     }
+
+    /**
+     * leetCode 55. 跳跃游戏(middle)
+     * https://leetcode.cn/problems/jump-game/description/
+     */
+    fun canJump(nums: IntArray): Boolean {
+        var ans = 0
+        for (index in nums.indices) {
+            val item = nums[index]
+            if (ans < index) {
+                //不在当前最大的跳跃范围内
+                //注定无法跳到这里
+                return false
+            }
+            //获取最大跳跃范围
+            ans = max(ans, item + index)
+        }
+        return true
+    }
+}
+
+fun main() {
+    val greedy = Greedy()
+    println(greedy.canJump(intArrayOf(2, 3, 1, 1, 4)))
+    println(greedy.canJump(intArrayOf(3, 2, 1, 0, 4)))
+
 }
