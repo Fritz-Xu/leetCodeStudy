@@ -76,11 +76,26 @@ class Greedy {
         }
         return ans
     }
+
+    /**
+     * leetCode 179. 最大数(middle)
+     * https://leetcode.cn/problems/largest-number/description/
+     */
+    fun largestNumber(nums: IntArray): String {
+        return nums.sortedWith { a, b ->
+            //对比前后数字组装在一起的大小,例如 a = 1,b = 9,看下 19 和 91,哪个组装更大
+            "${b}${a}".compareTo("${a}${b}")
+        }.joinToString("") //把 list 组装为 String
+            .let {
+            // 如果首位是0，代表后面全是0
+            if (it[0] == '0') "0" else it
+        }
+    }
 }
 
 fun main() {
     val greedy = Greedy()
-    println(greedy.canJump(intArrayOf(2, 3, 1, 1, 4)))
-    println(greedy.canJump(intArrayOf(3, 2, 1, 0, 4)))
+    println(greedy.largestNumber(intArrayOf(10,2)))
+    println(greedy.largestNumber(intArrayOf(3,30,34,5,9)))
 
 }
