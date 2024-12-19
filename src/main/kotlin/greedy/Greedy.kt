@@ -56,6 +56,26 @@ class Greedy {
         }
         return true
     }
+
+    /**
+     * leetCode 45. 跳跃游戏 II(middle)
+     * https://leetcode.cn/problems/jump-game-ii/description/
+     */
+    fun jump(nums: IntArray): Int {
+        var ans = 0 //跳跃次数
+        var mx = 0 //当前最大跳跃距离
+        var last = 0 //记录上一次跳跃到的位置
+        repeat(nums.size) {
+            //获取当前最大跳跃距离
+            mx = max(mx, it + nums[it])
+            if (last == it) {
+                //当前就是上次最大跳跃距离
+                ans++
+                last = mx
+            }
+        }
+        return ans
+    }
 }
 
 fun main() {
