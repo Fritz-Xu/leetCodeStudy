@@ -87,15 +87,36 @@ class Greedy {
             "${b}${a}".compareTo("${a}${b}")
         }.joinToString("") //把 list 组装为 String
             .let {
-            // 如果首位是0，代表后面全是0
-            if (it[0] == '0') "0" else it
+                // 如果首位是0，代表后面全是0
+                if (it[0] == '0') "0" else it
+            }
+    }
+
+    /**
+     * leetCode 553.最优除法(middle)
+     * https://leetcode.cn/problems/optimal-division/description/
+     * 提示:数组第一个元素固定为分子,第二个元素固定为分母,那么最大值就是让分母只有一个元素
+     * 例如数组为[1,2,3,4],那么最优除法最大值就是(1*3*4)/2,也就是1/(2/3/4)
+     */
+    fun optimalDivision(nums: IntArray): String {
+        val size = nums.size
+        val builder = StringBuilder()
+        builder.append(nums[0])
+        for (index in 1..<size) {
+            if (index == 1 && size > 2) {
+                builder.append("/(").append(nums[index])
+            } else {
+                builder.append("/").append(nums[index])
+            }
         }
+        return if (nums.size > 2) builder.append(")").toString() else builder.toString()
     }
 }
 
 fun main() {
     val greedy = Greedy()
-    println(greedy.largestNumber(intArrayOf(10,2)))
-    println(greedy.largestNumber(intArrayOf(3,30,34,5,9)))
+    println(greedy.optimalDivision(intArrayOf(1000,100,10,2)))  // 1000/(100/10/2)
+    println(greedy.optimalDivision(intArrayOf(2,3,4)))  // 2/(3/4)
+    println(greedy.optimalDivision(intArrayOf(1,2,3,4)))
 
 }
