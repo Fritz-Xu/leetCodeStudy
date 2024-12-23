@@ -1508,6 +1508,7 @@ class StringCodeModel {
         }
         return "1".repeat(binary.length - 1 - count) + '0' + "1".repeat(count)
     }
+
 }
 
 fun main(args: Array<String>) {

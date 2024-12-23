@@ -93,6 +93,48 @@ class Greedy {
     }
 
     /**
+     * leetCode 397. 整数替换(middle)
+     */
+    fun integerReplacement(n: Int): Int {
+        var ans = 0
+        var result = n
+        while (result != 1) {
+            if ((result and 1) == 0) {
+                result = result ushr 1
+            } else if (result != 3 && (result and 3) == 3) {
+                ++result
+            } else {
+                --result
+            }
+            ++ans
+        }
+        return ans
+    }
+
+    /**
+     *  leetCode 134. 加油站(middle)
+     * https://leetcode.cn/problems/gas-station/
+     * 配合灵神的分析
+     * https://leetcode.cn/problems/gas-station/solutions/2933132/yong-zhe-xian-tu-zhi-guan-li-jie-pythonj-qccr/
+     */
+    fun canCompleteCircuit(gas: IntArray, cost: IntArray): Int {
+        var ans = 0
+        var minS = 0//最小油量
+        var s = 0 //当前油量
+        repeat(gas.size) {
+            // 在 i 处加油，然后车子开到了 i+1 是消耗
+            s += gas[it] - cost[it]
+            if (s < minS) {
+                //此时 s 为负数
+                minS = s
+                ans = it + 1 //那么 it + 1 就是下一个站
+            }
+        }
+        // 循环结束后，s 即为 gas 之和减去 cost 之和
+        return if (s < 0) -1 else ans
+    }
+
+    /**
      * leetCode 553.最优除法(middle)
      * https://leetcode.cn/problems/optimal-division/description/
      * 提示:数组第一个元素固定为分子,第二个元素固定为分母,那么最大值就是让分母只有一个元素
@@ -115,8 +157,8 @@ class Greedy {
 
 fun main() {
     val greedy = Greedy()
-    println(greedy.optimalDivision(intArrayOf(1000,100,10,2)))  // 1000/(100/10/2)
-    println(greedy.optimalDivision(intArrayOf(2,3,4)))  // 2/(3/4)
-    println(greedy.optimalDivision(intArrayOf(1,2,3,4)))
+    println(greedy.optimalDivision(intArrayOf(1000, 100, 10, 2)))  // 1000/(100/10/2)
+    println(greedy.optimalDivision(intArrayOf(2, 3, 4)))  // 2/(3/4)
+    println(greedy.optimalDivision(intArrayOf(1, 2, 3, 4)))
 
 }
