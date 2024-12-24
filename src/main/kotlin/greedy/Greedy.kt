@@ -153,6 +153,21 @@ class Greedy {
         }
         return if (nums.size > 2) builder.append(")").toString() else builder.toString()
     }
+
+    /**
+     * leetCode 561. 数组拆分(easy)
+     * https://leetcode.cn/problems/array-partition/description/
+     */
+    fun arrayPairSum(nums: IntArray): Int {
+        nums.sort()
+        var count = 0
+        var ans = 0
+        while (count < nums.size) {
+            ans += nums[count]
+            count += 2
+        }
+        return ans
+    }
 }
 
 fun main() {
