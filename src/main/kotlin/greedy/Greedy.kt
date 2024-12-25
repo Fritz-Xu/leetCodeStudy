@@ -168,6 +168,19 @@ class Greedy {
         }
         return ans
     }
+
+    /**
+     * leetCode 575. 分糖果(easy)
+     * https://leetcode.cn/problems/distribute-candies/description/
+     */
+    fun distributeCandies(candyType: IntArray): Int {
+        //先判断有多少种类的糖果,然后对比糖果种类和可以吃的糖果数量
+        val ans = mutableSetOf<Int>()
+        candyType.forEach {
+            ans.add(it)
+        }
+        return min(ans.size, candyType.size / 2)
+    }
 }
 
 fun main() {
