@@ -1,7 +1,9 @@
 package greedy
 
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
+
 
 class Greedy {
 
@@ -180,6 +182,52 @@ class Greedy {
             ans.add(it)
         }
         return min(ans.size, candyType.size / 2)
+    }
+
+    /**
+     * 630. 课程表 III
+     *https://leetcode.cn/problems/course-schedule-iii/description/
+     */
+    fun scheduleCourse(courses: Array<IntArray>): Int {
+        // 按课程结束时间升序排列, 首先考虑当前最先结束的课程
+        Arrays.sort(courses) { a: IntArray, b: IntArray ->
+            a[1] - b[1]
+        }
+        //大根堆,将课程持续时间最长的课放在堆顶
+        val ans = PriorityQueue { a: Int, b: Int -> b - a }
+        var sum = 0
+        //从课程结束时间最早开始加入堆中,如果碰到总课程时间大于课程结束时间
+        //就把当前队列中最耗时的课程给弹出队列,借此贪心保证学习的课程最多
+        for (item in courses) {
+            val d = item[0]
+            val e = item[1]
+            sum += d
+            ans.add(d)
+            if (sum > e) sum -= ans.poll()
+        }
+        return ans.size
+    }
+
+    /**
+     * 646. 最长数对链(middle)
+     * https://leetcode.cn/problems/maximum-length-of-pair-chain/description/
+     * 排序 + 贪心
+     */
+    fun findLongestChain(pairs: Array<IntArray>): Int {
+        //将pairs二维数组按照数对中后一个数进行排序
+        Arrays.sort(pairs) { a: IntArray, b: IntArray ->
+            if (a[1] == b[1]) a[0] - b[0] else a[1] - b[1]
+        }
+        var ans = 1
+        var last = pairs[0][1]
+        for (index in 1 until pairs.size) {
+            val cur = pairs[index]
+            if (cur[0] > last) {
+                ans++
+                last = cur[1]
+            }
+        }
+        return ans
     }
 }
 
