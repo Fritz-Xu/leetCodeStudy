@@ -1,5 +1,6 @@
 package greedy
 
+import jdk.internal.org.jline.utils.Colors.s
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -228,6 +229,41 @@ class Greedy {
             }
         }
         return ans
+    }
+
+    /**
+     * leetCode 649. Dota2 参议院(middle)
+     * https://leetcode.cn/problems/dota2-senate/description/
+     */
+    fun predictPartyVictory(senate: String): String {
+        //这道题本质就是循环队列 + 兑子,把对方队列清零就赢了
+        //r队列
+        val rd: Deque<Int> = LinkedList()
+        //d队列
+        val dd: Deque<Int> = LinkedList()
+        for (index in senate.indices) {
+            //存放下标
+            if (senate[index] == 'R') {
+                rd.addLast(index)
+            } else {
+                dd.addLast(index)
+            }
+        }
+        while (rd.size != 0 && dd.size != 0) {
+            //开始兑子,各自出列
+            val r = rd.pollFirst()
+            val d = dd.pollFirst()
+            if (r < d) {
+                //说明 r 可以干掉 d,但需要等这轮结束
+                //因此插入 r + senate.length
+                rd.addLast(r + senate.length)
+            } else {
+                //说明 d 可以干掉 r,但需要等这轮结束
+                //因此插入 d + senate.length
+                dd.addLast(d + senate.length)
+            }
+        }
+        return if (rd.size != 0) "Radiant" else "Dire"
     }
 }
 
