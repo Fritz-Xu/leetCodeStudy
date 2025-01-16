@@ -34,7 +34,7 @@ class DynamicRunModel {
      * https://leetcode.cn/problems/fibonacci-number/description/
      */
     fun fib(n: Int): Int {
-        val mem = IntArray(n + 1).apply {
+        val mem = LongArray(n + 1).apply {
             repeat(this.size) {
                 this[it] = -1
             }
@@ -42,19 +42,19 @@ class DynamicRunModel {
         return fibDp(n, mem)
     }
 
-    private fun fibDp(size: Int, mem: IntArray): Int {
+    private fun fibDp(size: Int, mem: LongArray): Int {
         if (size == 0) {
             return 0
         }
         if (size <= 2) {
             return 1
         }
-        if (mem[size] != -1) {
-            return mem[size]
+        if (mem[size] != -1L) {
+            return mem[size].toInt()
         }
         //斐波那契数公式 ：F(n)=F(n - 1)+F(n - 2)
         val count = fibDp(size - 1, mem) + fibDp(size - 2, mem)
-        mem[size] = count
+        mem[size] = count.toLong()
         return count
     }
 

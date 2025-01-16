@@ -1,7 +1,6 @@
 package array
 
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -2063,6 +2062,53 @@ class ArraysCodeModel {
         }
         return ans.toString()
     }
+
+    /**
+     * LCR 129. 字母迷宫(middle)
+     * https://leetcode.cn/problems/ju-zhen-zhong-de-lu-jing-lcof/
+     * (回溯)这道题和下面的岛屿数量一样的
+     */
+    fun wordPuzzle(grid: Array<CharArray>, target: String): Boolean {
+        if (grid.isEmpty()) {
+            return false
+        }
+        val width = grid[0].size - 1
+        for (index in grid.indices) {
+            for (position in 0..width) {
+                if (wordPuzzleDfs(grid, target, index, position, 0)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun wordPuzzleDfs(
+        grid: Array<CharArray>, target: String,
+        x: Int, y: Int, index: Int
+    ): Boolean {
+        if (index >= target.length) {
+            return true
+        }
+        if (x < 0 || x >= grid.size || y < 0 || y >= grid[0].size || target[index] != grid[x][y]) {
+            return false
+        }
+        //防止重复访问
+        grid[x][y] = ' '
+        //1, 0  ->表示向左移动
+        //0, 1  ->表示向上移动
+        //1, 0  ->表示向右移动
+        //0, -1 ->表示向下移动
+        val dirs = intArrayOf(-1, 0, 1, 0, -1)
+        var ans = false
+        for (l in 0..3) {
+            ans = ans || wordPuzzleDfs(grid, target, x + dirs[l], y + dirs[l + 1], index + 1)
+        }
+        //防止重复访问,回溯到之前的状态
+        grid[x][y] = target[index]
+        return ans
+    }
+
 
     /**
      * 200. 岛屿数量
