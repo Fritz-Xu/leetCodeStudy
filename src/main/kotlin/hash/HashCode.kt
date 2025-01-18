@@ -127,6 +127,26 @@ class HashCode {
         }
         return ans
     }
+
+    /**
+     * 整理全部的箱子
+     */
+    fun wardrobeFinishing(m: Int, n: Int, cnt: Int): Int {
+        // 创建一个 3x3 的二维布尔数组，所有元素初始化为 false
+        val vis = Array(m) { BooleanArray(n) { false } }
+        return wardrobeFinishingDfs(m, n, cnt, vis, 0, 0)
+    }
+
+    private fun wardrobeFinishingDfs(
+        m: Int, n: Int, k: Int,
+        vis: Array<BooleanArray>, i: Int, j: Int
+    ): Int {
+        if ((i >= m || j >= n || vis[i][j]) || (i % 10 + i / 10 + j % 10 + j / 10) > k) {
+            return 0
+        }
+        vis[i][j] = true
+        return 1 + wardrobeFinishingDfs(m, n, k, vis, i + 1, j) + wardrobeFinishingDfs(m, n, k, vis, i, j + 1)
+    }
 }
 
 fun main() {

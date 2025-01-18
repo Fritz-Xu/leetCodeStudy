@@ -1,6 +1,7 @@
 package dynamic_programming
 
 import java.util.*
+import kotlin.math.max
 
 /**
  * 爬楼梯的 dp
@@ -102,7 +103,7 @@ class DynamicStaircaseModel {
         // 初始状态：预设最小子问题的解
         dp[1] = 1
         dp[2] = 2
-        for (i in 3..< dp.size) {
+        for (i in 3..<dp.size) {
             // 状态转移：从较小子问题逐步求解较大子问题
             dp[i] = dp[i - 1] + dp[i - 2]
         }
@@ -111,6 +112,22 @@ class DynamicStaircaseModel {
         // 备忘录初始化为一个不会被取到的特殊值，代表还未被计算
         Arrays.fill(memo, -666)
         return dp[num]
+    }
+
+    /**
+     * 343. 整数拆分(middle)
+     * https://leetcode.cn/problems/integer-break/description/
+     */
+    fun integerBreak(n: Int): Int {
+        val ans = IntArray(n + 1)
+        ans[1] = 1
+        for (index in 2..n) {
+            for (position in 1..<index) {
+                // 状态转移方程
+                ans[index] = max(ans[index], max(ans[index - position] * position,(index - position) * position))
+            }
+        }
+        return ans[n]
     }
 }
 
